@@ -181,25 +181,6 @@ class UserController extends Controller
         
     }
 
-    public function manager(Request $request,$id)
-    {
-        if($request->has('api_token'))
-        {
-            $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
-            if($user)
-            {
-                UserModel::where([
-                    ["UUID_USER",$id],
-                    ["USER_TOKEN",$request->get("api_token")]])->update([
-                        "UUID_RULE" => 'manager-2019'
-                    ]);
-                return response()->json([
-                    "success" => true,
-                    "message" => "Đăng ký trờ thành chủ quán thành công!"
-                ], 200);
-            }
-        }
-    }
     /**
      * Display the specified resource.
      *
@@ -253,9 +234,6 @@ class UserController extends Controller
                     $file->move(public_path().'/upload/avatars/', $file->getClientOriginalName());
                     $path = '/upload/avatars/'.$name;
                     $data["AVATAR"] = $path;
-                    UserModel::where("UUID_USER",$id)->update([
-                        "AVATAR" =>  $data["AVATAR"]
-                    ]);
                 }
                 UserModel::where("UUID_USER",$id)->update([
                     "DISPLAY_NAME" => $request->get("DISPLAY_NAME"),

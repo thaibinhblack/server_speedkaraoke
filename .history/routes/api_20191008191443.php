@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 // });
 Route::group(['prefix' => '/v1'], function () {
     Route::get('/user','UserController@index')->middleware('cors');
-    Route::get('/user/{id}/manager-karaoke','UserController@manager')->middleware('cors');
+    Route::get('/user/{id}/manager-karaoke@manager')->middleware('cors');
     Route::post('/user/{id}/update','UserController@update')->middleware('cors');
     Route::get('/info/user/{id}','UserController@show')->middleware('cors');
     Route::get('/user/token','UserController@checkToken')->middleware('cors');

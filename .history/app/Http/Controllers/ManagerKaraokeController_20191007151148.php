@@ -21,9 +21,7 @@ class ManagerKaraokeController extends Controller
            if($user)
            {
                 $managers = ManagerKaraoke::join("table_bar_karaoke","table_detail_manager_bar_karaoke.UUID_BAR_KARAOKE","table_bar_karaoke.UUID_BAR_KARAOKE")
-                ->join("table_user","table_detail_manager_bar_karaoke.UUID_USER","table_user.UUID_USER")
-                ->where("table_detail_manager_bar_karaoke.UUID_USER",$user->UUID_USER)
-                ->select("table_detail_manager_bar_karaoke.*","table_user.*","table_bar_karaoke.NAME_BAR_KARAOKE")
+                ->where("UUID_USER",$user->UUID_USER)
                 ->get();
                 return response()->json($managers, 200);
            }

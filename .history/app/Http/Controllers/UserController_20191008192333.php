@@ -192,11 +192,7 @@ class UserController extends Controller
                     ["UUID_USER",$id],
                     ["USER_TOKEN",$request->get("api_token")]])->update([
                         "UUID_RULE" => 'manager-2019'
-                    ]);
-                return response()->json([
-                    "success" => true,
-                    "message" => "Đăng ký trờ thành chủ quán thành công!"
-                ], 200);
+                    ])
             }
         }
     }

@@ -97,16 +97,12 @@ class BookingController extends Controller
                 BookingModel::where("UUID_BOOKING",$id)->update([
                     "STATUS" => $request->get("status")
                 ]);
-                // HistoryModel::create([
-                //     "UUID_HISTORY" => Str::uuid(),
-                //     "UUID_USER" => $user->UUID_USER,
-                //     "NAME_HISTORY" => "Đặt phòng karaoke",
-                //     "CONTENT_ACTION" => $user->EMAIL.' cập nhật booking của user '.$user_booking->EMAIL
-                // ]);
-                return response()->json([
-                    "success" => true,
-                    "message" => "Cập nhật thành công!"
-                ], 200);
+                HistoryModel::create([
+                    "UUID_HISTORY" => Str::uuid(),
+                    "UUID_USER" => $user->UUID_USER,
+                    "NAME_HISTORY" => "Đặt phòng karaoke",
+                    "CONTENT_ACTION" => $user->EMAIL.' cập nhật booking của user '.$user_booking->EMAIL
+                ]);
             }
         }
     }

@@ -106,7 +106,7 @@ class BookingController extends Controller
                 return response()->json([
                     "success" => true,
                     "message" => "Cập nhật thành công!"
-                ], 200);
+                ], 200, $headers);
             }
         }
     }

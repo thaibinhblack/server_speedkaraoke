@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\model\BookingModel;
 use App\model\UserModel;
-use App\model\HistoryModel;
 use Illuminate\Support\Str;
 
 class BookingController extends Controller
@@ -50,7 +49,6 @@ class BookingController extends Controller
             if($user)
             {
                 $booking = BookingModel::create([
-                    "UUID_BOOKING" => Str::uuid(),
                     "UUID_ROOM_BAR_KARAOKE" => $request->get("UUID_ROOM_BAR_KARAOKE"),
                     "UUID_BAR_KARAOKE" => $request->get("UUID_BAR_KARAOKE"),
                     "UUID_USER" => $user->UUID_USER,
@@ -83,32 +81,6 @@ class BookingController extends Controller
     public function update(Request $request, $id)
     {
         //
-    }
-
-    public function check(Request $request,$id)
-    {
-        if($request->has('api_token'))
-        {
-            $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
-            if($user)
-            {
-                $user_booking =   BookingModel::join("table_user","table_booking.UUID_USER","table_user.UUID_USER")
-                ->where("UUID_BOOKING",$id)->select("table_user.EMAIL","table_booking.*")->first();
-                BookingModel::where("UUID_BOOKING",$id)->update([
-                    "STATUS" => $request->get("status")
-                ]);
-                // HistoryModel::create([
-                //     "UUID_HISTORY" => Str::uuid(),
-                //     "UUID_USER" => $user->UUID_USER,
-                //     "NAME_HISTORY" => "Đặt phòng karaoke",
-                //     "CONTENT_ACTION" => $user->EMAIL.' cập nhật booking của user '.$user_booking->EMAIL
-                // ]);
-                return response()->json([
-                    "success" => true,
-                    "message" => "Cập nhật thành công!"
-                ], 200);
-            }
-        }
     }
 
     /**
