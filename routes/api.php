@@ -64,5 +64,6 @@ Route::group(['prefix' => '/v1'], function () {
     //booking
     Route::get('/booking','BookingController@index')->middleware('cors');
     Route::get('/booking/{id}/check','BookingController@check')->middleware('cors');
+    Route::get('/booking/{id}/show','BookingController@show')->middleware('cors');
     Route::post('/booking','BookingController@store')->middleware('cors');
 });

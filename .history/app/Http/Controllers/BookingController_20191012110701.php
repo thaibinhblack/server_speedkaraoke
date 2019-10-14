@@ -83,15 +83,14 @@ class BookingController extends Controller
         if($request->has('status'))
         {
             $booking = BookingModel::where([
-                ["STATUS" ,$request->get("status")],
+                ["STATUS" ,$request->get("STATUS")],
                 ["UUID_ROOM_BAR_KARAOKE",$id]
             ])->first();
             if($booking)
             {
                 return response()->json([
                     "success" => true,
-                    "message" => "Có tồn tại booking",
-                    "data" => $booking
+                    "message" => "Có tồn tại booking"
                 ], 200);
             }
             return response()->json([

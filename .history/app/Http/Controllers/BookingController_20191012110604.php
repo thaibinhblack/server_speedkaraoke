@@ -80,31 +80,32 @@ class BookingController extends Controller
      */
     public function show($id,Request $request)
     {
-        if($request->has('status'))
-        {
-            $booking = BookingModel::where([
-                ["STATUS" ,$request->get("status")],
-                ["UUID_ROOM_BAR_KARAOKE",$id]
-            ])->first();
-            if($booking)
-            {
+        if($request->has('api_token')){
+               if($request->has('status'))
+               {
+                $booking = BookingModel::where([
+                    ["STATUS" ,$request->get("STATUS")],
+                    ["UUID_ROOM_BAR_KARAOKE",$id]
+                ])->first();
+                if($booking)
+                {
+                    return response()->json([
+                        "success" => true,
+                        "message" => "Có tồn tại booking"
+                    ], 200);
+                }
                 return response()->json([
-                    "success" => true,
-                    "message" => "Có tồn tại booking",
-                    "data" => $booking
+                    'success' => false,
+                    'message' => 'Không có booking'
                 ], 200);
-            }
-            return response()->json([
-                'success' => false,
-                'message' => 'Không có booking'
-            ], 200);
+               }
+               $bookings = BookingModel::where("UUID_ROOM_BAR_KARAOKE", $id)->get();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'List booking theo room',
+                    'data' => $bookings
+                ], 200);
         }
-        $bookings = BookingModel::where("UUID_ROOM_BAR_KARAOKE", $id)->get();
-        return response()->json([
-            'success' => false,
-            'message' => 'List booking theo room',
-            'data' => $bookings
-        ], 200);
     }
 
     /**

@@ -83,7 +83,7 @@ class BookingController extends Controller
         if($request->has('status'))
         {
             $booking = BookingModel::where([
-                ["STATUS" ,$request->get("status")],
+                ["STATUS" ,$request->get("STATUS")],
                 ["UUID_ROOM_BAR_KARAOKE",$id]
             ])->first();
             if($booking)

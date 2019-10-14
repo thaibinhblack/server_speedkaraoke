@@ -7,7 +7,7 @@ use App\model\BookingModel;
 use App\model\UserModel;
 use App\model\HistoryModel;
 use Illuminate\Support\Str;
-use DateTime;
+
 class BookingController extends Controller
 {
     /**
@@ -80,31 +80,7 @@ class BookingController extends Controller
      */
     public function show($id,Request $request)
     {
-        if($request->has('status'))
-        {
-            $booking = BookingModel::where([
-                ["STATUS" ,$request->get("status")],
-                ["UUID_ROOM_BAR_KARAOKE",$id]
-            ])->first();
-            if($booking)
-            {
-                return response()->json([
-                    "success" => true,
-                    "message" => "Có tồn tại booking",
-                    "data" => $booking
-                ], 200);
-            }
-            return response()->json([
-                'success' => false,
-                'message' => 'Không có booking'
-            ], 200);
-        }
-        $bookings = BookingModel::where("UUID_ROOM_BAR_KARAOKE", $id)->get();
-        return response()->json([
-            'success' => false,
-            'message' => 'List booking theo room',
-            'data' => $bookings
-        ], 200);
+        
     }
 
     /**
@@ -126,22 +102,11 @@ class BookingController extends Controller
             $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
             if($user)
             {
-                if($request->get('status') == 2)
-                {
-                    $date =  new DateTime();
-                    BookingModel::where("UUID_BOOKING",$id)->update([
-                        "STATUS" => $request->get("status"),
-                        'TIME_END' => $date->format('Y-m-d H:i:s')
-                    ]);
-                }
-                else {
-                    BookingModel::where("UUID_BOOKING",$id)->update([
-                        "STATUS" => $request->get("status")
-                    ]);
-                }
                 $user_booking =   BookingModel::join("table_user","table_booking.UUID_USER","table_user.UUID_USER")
                 ->where("UUID_BOOKING",$id)->select("table_user.EMAIL","table_booking.*")->first();
-                
+                BookingModel::where("UUID_BOOKING",$id)->update([
+                    "STATUS" => $request->get("status")
+                ]);
                 // HistoryModel::create([
                 //     "UUID_HISTORY" => Str::uuid(),
                 //     "UUID_USER" => $user->UUID_USER,
