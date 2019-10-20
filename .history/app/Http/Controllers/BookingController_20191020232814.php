@@ -45,7 +45,7 @@ class BookingController extends Controller
                                 [ "UUID_USER", $user->UUID_USER],
                                 [ "UUID_ROOM_BAR_KARAOKE",$request->get("UUID_ROOM_BAR_KARAOKE")]
                              ])
-                             ->whereIn('STATUS', [0,1])->orderBy('CREATED_AT','desc')->first();
+                             ->whereIn('STATUS', [0,1])->orderBy('CREATED_AT','desc')->get();
                              if($booking)
                              {
                                  if($booking->STATUS == 0)

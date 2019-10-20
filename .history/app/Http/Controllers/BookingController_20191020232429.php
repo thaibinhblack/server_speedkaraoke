@@ -45,29 +45,30 @@ class BookingController extends Controller
                                 [ "UUID_USER", $user->UUID_USER],
                                 [ "UUID_ROOM_BAR_KARAOKE",$request->get("UUID_ROOM_BAR_KARAOKE")]
                              ])
-                             ->whereIn('STATUS', [0,1])->orderBy('CREATED_AT','desc')->first();
-                             if($booking)
-                             {
-                                 if($booking->STATUS == 0)
-                                 {
-                                    return response()->json([
-                                        'success' => true,
-                                        'booking' => false,
-                                        'message' => 'Đang chờ nhận phòng',
-                                        'data' => $booking
-                                     ], 200);
-                                 }
-                                 return response()->json([
-                                    'success' => true,
-                                    'booking' => false,
-                                    'message' => 'Đã đặt phòng',
-                                    'data' => $booking
-                                 ], 200);
-                             }
+                             ->whereIn('STATUS', [0,1])->orderBy('CREATED_AT','desc')->get();
+                            //  if($booking)
+                            //  {
+                            //      if($booking->STATUS == 0)
+                            //      {
+                            //         return response()->json([
+                            //             'success' => true,
+                            //             'booking' => false,
+                            //             'message' => 'Đang chờ nhận phòng',
+                            //             'data' => $booking
+                            //          ], 200);
+                            //      }
+                            //      return response()->json([
+                            //         'success' => true,
+                            //         'booking' => false,
+                            //         'message' => 'Đã đặt phòng',
+                            //         'data' => $booking
+                            //      ], 200);
+                            //  }
                             return response()->json([
                                 'success' => true,
                                 'booking' => true,
-                                'message' => 'Chưa có người đặt phòng'
+                                'message' => 'Bạn đang sử dụng phòng này',
+                                'data' => $booking
                              ], 200);
                         }
                         return response()->json([
