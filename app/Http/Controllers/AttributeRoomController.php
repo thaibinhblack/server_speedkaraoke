@@ -61,7 +61,7 @@ class AttributeRoomController extends Controller
                     "UUID_ATTRIBUTE_ROOM" => $uuid
                 ]);
                 HistoryModel::create([
-                    "UUID_HISTORY" => Str::uuid(),
+                    "UUID_HISTORY_ACTION" => Str::uuid(),
                     "UUID_USER" => $user->UUID_USER,
                     "NAME_HISTORY" => "Thuộc tính phòng",
                     "CONTENT_ACTION" => $user->EMAIL.' thêm thuộc tính '.$request->get("NAME_ATTRIBUTE").' với giá trị là'.$request->get("CONTENT_ATTRIBUTE")

@@ -12,7 +12,7 @@ class UserModel  extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
-    protected $table = "TABLE_USER";
+    protected $table = "table_user";
     protected $fillable = ["UUID_USER", "UUID_RULE", "USERNAME", "PASSWORD", "AVATAR", "EMAIL", "PHONE", 
     "DISPLAY_NAME", "GENDER", "BIRTH_DAY", "ADDRESS", "RELIABILITY","NUMBER_BOOK", "CANCLE_BOOK",
      "USER_CREATE", "TYPE_USER", "DISPLAY_NAME", "USER_TOKEN"];
