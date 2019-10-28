@@ -115,7 +115,7 @@ class BarKaraokeController extends Controller
             ->join("table_district","table_bar_karaoke.ID_DISTRICT","table_district.ID_DISTRICT")
             ->select("table_bar_karaoke.*","table_province.NAME_PROVINCE","table_district.NAME_DISTRICT")
             ->orderBy("NUMBER_REATED","DESC","STAR_RATING","DESC","VIEW","DESC")
-            ->limit(10)
+            ->limit(100)
             ->get();
         return response()->json($karaoke, 200);
     }
@@ -127,7 +127,7 @@ class BarKaraokeController extends Controller
         ->join("table_district","table_bar_karaoke.ID_DISTRICT","table_district.ID_DISTRICT")
         ->select("table_bar_karaoke.*","table_province.NAME_PROVINCE","table_district.NAME_DISTRICT")
         ->orderBy("CREATED_AT","DESC")
-        
+        ->limit(10)
         ->get();
         return response()->json($karaoke, 200);
     }

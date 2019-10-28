@@ -19,7 +19,7 @@ class AttributeRoomController extends Controller
     {
         if($request->has("UUID_ROOM_BAR_KARAOKE"))
         {
-            $attribute = AttributeRoomModel::join("table_detail_attribute_room", "table_detail_attribute_room.UUID_ATTRIBUTE_ROOM", "table_detail_attribute_room.UUID_ATTRIBUTE_ROOM")
+            $attribute = AttributeRoomModel::join("table_detail_attribute_room", "table_detail_attribute_room.UUID_ATTRIBUTE_ROOM", "TABLE_DETAIL_ATTRIBUTE_ROOM.UUID_ATTRIBUTE_ROOM")
             ->where('UUID_ROOM_BAR_KARAOKE',$request->get("UUID_ROOM_BAR_KARAOKE"))->orderBy('table_detail_attribute_room.CREATED_AT','asc')->get();
             return response()->json($attribute, 200);
         }
