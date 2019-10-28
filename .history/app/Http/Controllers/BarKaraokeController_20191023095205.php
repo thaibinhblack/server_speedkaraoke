@@ -96,19 +96,9 @@ class BarKaraokeController extends Controller
             else if($request->get('sort') == 'groupby')
             {
                 $karaokes = BarKaraokeModel::join('table_province','table_bar_karaoke.ID_PROVINCE','table_province.ID_PROVINCE')
-                ->select('table_province.NAME_PROVINCE','table_province.IMAGE_PROVINCE',DB::raw('count(table_bar_karaoke.ID_PROVINCE) as total'))
+                ->select('table_province.NAME_PROVINCE','table_province.IMAGE_PROVINCE','table_bar_karaoke.ID_PROVINCE',DB::raw('count(ID_PROVINCE) as total'))
                 ->groupBy('table_bar_karaoke.ID_PROVINCE')->orderBy("total","DESC")->get();
                 return response()->json($karaokes, 200);
-                // $karaokes = DB::table("table_bar_karaoke")
-
-                
-      
-                // ->join("table_province","table_bar_karaoke.ID_PROVINCE","=","table_province.ID_PROVINCE")
-                // ->select("table_province.NAME_PROVINCE",DB::raw("count(table_bar_karaoke.ID_PROVINCE)"))
-                // ->groupBy("table_bar_karaoke.ID_PROVINCE")
-      
-                // ->get();
-                // return response()->json($karaokes, 200);
             }
         }
     }

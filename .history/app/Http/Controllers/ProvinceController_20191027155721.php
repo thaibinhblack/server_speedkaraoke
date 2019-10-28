@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\model\ProvinceModel;
-use App\model\BarKaraokeModel;
 class ProvinceController extends Controller
 {
     /**
@@ -14,7 +13,11 @@ class ProvinceController extends Controller
      */
     public function index(Request $request)
     {
-        
+        if($request->has('NAME_PROVINCE'))
+        {
+            $province = ProvinceModel::where("NAME_PROVINCE","like",'%'.$request->get("NAME_RPOVINCE").'%')->first();
+            return response()->json($province, 200);
+        }
         $province = ProvinceModel::all();
         return response()->json($province, 200);
     }
@@ -37,20 +40,7 @@ class ProvinceController extends Controller
      */
     public function store(Request $request)
     {
-        
-    }
-
-    public function search(Request $request)
-    {
-        if($request->has('search'))
-        {
-            $province = ProvinceModel::where("NAME_PROVINCE","like",$request->get("search").'%')->first();
-            $karaoke = BarKaraokeModel::join('table_province','table_bar_karaoke.ID_PROVINCE','table_province.ID_PROVINCE')
-            ->join('table_district','table_bar_karaoke.ID_DISTRICT','table_district.ID_DISTRICT')
-            ->where("table_bar_karaoke.ID_PROVINCE",$province->ID_PROVINCE)->select('table_bar_karaoke.*','table_province.NAME_PROVINCE','table_district.NAME_DISTRICT')
-            ->get();
-            return response()->json($karaoke, 200);
-        }
+        //
     }
 
     /**

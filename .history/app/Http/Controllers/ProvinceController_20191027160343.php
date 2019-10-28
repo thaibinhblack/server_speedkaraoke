@@ -45,11 +45,8 @@ class ProvinceController extends Controller
         if($request->has('search'))
         {
             $province = ProvinceModel::where("NAME_PROVINCE","like",$request->get("search").'%')->first();
-            $karaoke = BarKaraokeModel::join('table_province','table_bar_karaoke.ID_PROVINCE','table_province.ID_PROVINCE')
-            ->join('table_district','table_bar_karaoke.ID_DISTRICT','table_district.ID_DISTRICT')
-            ->where("table_bar_karaoke.ID_PROVINCE",$province->ID_PROVINCE)->select('table_bar_karaoke.*','table_province.NAME_PROVINCE','table_district.NAME_DISTRICT')
-            ->get();
-            return response()->json($karaoke, 200);
+            return response()->json($province, 200);
+            $karaoke = BarKaraokeModel::where("UUID_PROVINCE",$province->UUID_PROVINCE)->get();
         }
     }
 

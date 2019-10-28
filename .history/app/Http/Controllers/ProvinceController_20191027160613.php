@@ -49,7 +49,6 @@ class ProvinceController extends Controller
             ->join('table_district','table_bar_karaoke.ID_DISTRICT','table_district.ID_DISTRICT')
             ->where("table_bar_karaoke.ID_PROVINCE",$province->ID_PROVINCE)->select('table_bar_karaoke.*','table_province.NAME_PROVINCE','table_district.NAME_DISTRICT')
             ->get();
-            return response()->json($karaoke, 200);
         }
     }
 
