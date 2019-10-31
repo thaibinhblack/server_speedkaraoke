@@ -50,7 +50,7 @@ class ProvinceController extends Controller
         }
         else
         {
-            $province = ProvinceModel::where("NAME_PROVINCE","like",$request->get("NAME_PROVINCE").'%')->first();
+            $province = ProvinceModel::where("NAME_RPOVINCE","like",$request->get("NAME_RPOVINCE").'%')->first();
         }
         $karaoke = BarKaraokeModel::join('table_province','table_bar_karaoke.ID_PROVINCE','table_province.ID_PROVINCE')
             ->join('table_district','table_bar_karaoke.ID_DISTRICT','table_district.ID_DISTRICT')

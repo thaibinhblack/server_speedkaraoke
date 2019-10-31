@@ -46,7 +46,6 @@ class ImageController extends Controller
     }
     public function upload(Request $request)
     {
-        return response()->json($request->all(), 200);
         if($request->has('IMAGES'))
         {
             $UUID_BAR_KARAOKE = null;

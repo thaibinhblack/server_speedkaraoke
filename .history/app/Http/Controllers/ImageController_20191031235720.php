@@ -3,21 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\model\ProvinceModel;
-use App\model\DistrictModel;
-use App\model\BarKaraokeModel;
-class ProvinceController extends Controller
+use App\model\ImageModel;
+class ImageController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        
-        $province = ProvinceModel::all();
-        return response()->json($province, 200);
+        //
     }
 
     /**
@@ -38,39 +34,41 @@ class ProvinceController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $data = $request->all();
+        $file = $request->file('URL_IMAGE');
+        $name = $file->getClientOriginalName();
+        $file->move(public_path().'/upload/'.$request->get('type_image').'/', $file->getClientOriginalName());
+        $path = '/upload/'.$request->get('type_image').'/'.$name;
+        $data["URL_IMAGE"] = $path;
+        $image = ImageModel::create($data);
+        return response()->json($image, 200);
     }
-
-    public function search(Request $request)
+    public function upload(Request $request)
     {
-        if($request->has('search'))
+        if($request->has('IMAGES'))
         {
-            $province = DistrictModel::where("NAME_DISTRICT","like",$request->get("search").'%')->first();
-            
+            $files = $request->file('IMAGES');
+            foreach ($file as $files) {
+                $file->move(public_path().'/upload/'.$request->get('type_image').'/', $file->getClientOriginalName());
+                $path = '/upload/'.$request->get('type_image').'/'.$name;
+                $data["URL_IMAGE"] = $path;
+                $image = ImageModel::create($data);
+            }
         }
-        else
-        {
-            $province = ProvinceModel::where("NAME_PROVINCE","like",$request->get("NAME_PROVINCE").'%')->first();
-        }
-        $karaoke = BarKaraokeModel::join('table_province','table_bar_karaoke.ID_PROVINCE','table_province.ID_PROVINCE')
-            ->join('table_district','table_bar_karaoke.ID_DISTRICT','table_district.ID_DISTRICT')
-            ->where("table_bar_karaoke.ID_PROVINCE",$province->ID_PROVINCE)
-            ->select('table_bar_karaoke.*','table_province.NAME_PROVINCE','table_district.NAME_DISTRICT')
-            ->orderBy("NUMBER_REATED","desc","STAR_RATING","desc")
-            ->get();
-            return response()->json($karaoke, 200);
     }
-
     /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id,Request $request)
     {
-        $provinces = ProvinceModel::where("ID_PROVINCE",$id)->first();
-        return response()->json($provinces, 200);
+        if($request->has('type'))
+        {
+            $images = ImageModel::where($request->get('type'),$id)->get();
+            return response()->json($images, 200);
+        }
     }
 
     /**

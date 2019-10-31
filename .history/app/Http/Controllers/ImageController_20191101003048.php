@@ -46,7 +46,6 @@ class ImageController extends Controller
     }
     public function upload(Request $request)
     {
-        return response()->json($request->all(), 200);
         if($request->has('IMAGES'))
         {
             $UUID_BAR_KARAOKE = null;
@@ -58,7 +57,6 @@ class ImageController extends Controller
                 $UUID_ROOM_BAR_KARAOKE = $request->get("UUID_ROOM_BAR_KARAOKE");
             }
             $files = $request->file('IMAGES');
-            return response()->json($request->all(), 200);
             foreach ($file as $files) {
                 $file->move(public_path().'/upload/'.$request->get('type_image').'/', $file->getClientOriginalName());
                 $path = '/upload/'.$request->get('type_image').'/'.$name;
@@ -70,7 +68,7 @@ class ImageController extends Controller
                     "URL_IMAGE" => $path
                 ]);
             }
-           
+            return response()->json('success', 200);
         }
     }
     /**
