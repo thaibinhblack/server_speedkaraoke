@@ -58,8 +58,8 @@ class ImageController extends Controller
                 $UUID_ROOM_BAR_KARAOKE = $request->get("UUID_ROOM_BAR_KARAOKE");
             }
             $file = $request->file('IMAGES');
-            $file->move(public_path().'/upload/camera/', $file->getClientOriginalName());
-            $path = '/upload/camera/'.$file->getClientOriginalName();
+            $file->move(public_path().'/upload/'.$request->get('type_image').'/', $file->getClientOriginalName());
+            $path = '/upload/'.$request->get('type_image').'/'.$name;
             
             $image = ImageModel::create([
                 "UUID_IMAGE" => Str::uuid(),

@@ -59,7 +59,7 @@ class ImageController extends Controller
             }
             $file = $request->file('IMAGES');
             $file->move(public_path().'/upload/camera/', $file->getClientOriginalName());
-            $path = '/upload/camera/'.$file->getClientOriginalName();
+            $path = '/upload/camera/'.$name;
             
             $image = ImageModel::create([
                 "UUID_IMAGE" => Str::uuid(),

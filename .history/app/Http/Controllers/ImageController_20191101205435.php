@@ -57,17 +57,21 @@ class ImageController extends Controller
             if($request->has('UUID_ROOM_BAR_KARAOKE')){
                 $UUID_ROOM_BAR_KARAOKE = $request->get("UUID_ROOM_BAR_KARAOKE");
             }
-            $file = $request->file('IMAGES');
-            $file->move(public_path().'/upload/camera/', $file->getClientOriginalName());
-            $path = '/upload/camera/'.$file->getClientOriginalName();
-            
-            $image = ImageModel::create([
-                "UUID_IMAGE" => Str::uuid(),
-                "UUID_BAR_KARAOKE" => $UUID_BAR_KARAOKE,
-                "UUID_ROOM_BAR_KARAOKE" => $UUID_ROOM_BAR_KARAOKE,
-                "URL_IMAGE" => $path
-            ]);
-            return response()->json($image, 200);
+            $files = $request->file('IMAGES');
+            return response()->json($files, 200);
+            foreach ($file as $files) {
+                return response()->json($file, 200);
+                $file->move(public_path().'/upload/'.$request->get('type_image').'/', $file->getClientOriginalName());
+                $path = '/upload/'.$request->get('type_image').'/'.$name;
+                
+                $image = ImageModel::create([
+                    "UUID_IMAGE" => Str::uuid(),
+                    "UUID_BAR_KARAOKE" => $UUID_BAR_KARAOKE,
+                    "UUID_ROOM_BAR_KARAOKE" => $UUID_ROOM_BAR_KARAOKE,
+                    "URL_IMAGE" => $path
+                ]);
+            }
+            // return response()->json('success', 200);
            
         }
     }
