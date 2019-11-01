@@ -213,31 +213,6 @@ class UserController extends Controller
         ]);
         return response()->json($request->get("TOKEN"), 200);
     }
-    public function google(Request $request)
-    {
-        $user = UserModel::where([
-            ["EMAIL",$request->get("EMAIL")],
-        ])->first();
-        if($user)
-        {
-            UserModel::where([
-                ["EMAIL",$request->get("EMAIL")],
-            ])->update([
-                "USER_TOKEN" => $request->get("TOKEN")
-            ]);
-            return response()->json($request->get("TOKEN"), 200);
-        }
-        UserModel::create([
-            "UUID_USER" => Str::uuid(),
-            "UUID_RULE" => 'user-2019',
-            "EMAIL" => $request->get("EMAIL"),
-            "DISPLAY_NAME" => $request->get("DISPLAY_NAME"),
-            "AVATAR" => $request->get("AVATAR"),
-            "USER_TOKEN" => $request->get("TOKEN"),
-            "TYPE_USER" => "GOOGLE"
-        ]);
-        return response()->json($request->get("TOKEN"), 200);
-    }
 
     public function manager(Request $request,$id)
     {
