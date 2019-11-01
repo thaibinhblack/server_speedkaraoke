@@ -11,6 +11,7 @@ use Illuminate\Http\Response;
 use App\model\HistoryModel;
 use Illuminate\Support\Str;
 use App\model\ManagerKaraoke;
+
 class UserController extends Controller
 {
     /**
@@ -107,9 +108,54 @@ class UserController extends Controller
         if($request->has('api_token'))
         {
             $user = UserModel::where("USER_TOKEN",$request->get("api_token"))->first();
-            return response()->json($user, 200);
+            if($user)
+            {
+                return response()->json($user, 200);
+            }
+            return response()->json([
+                'success' => false,
+                'message' => 'Authorizon'
+            ], 404);
         }
         
+    }
+
+
+    public function resignter(Request $request)
+    {
+        $check = UserModel::where("EMAIL",$request->get("EMAIL"))->first();
+        if($check)
+        {
+            return response()->json([
+                "success" => false,
+                "message" => "Email đã tồn tại!"
+            ], 200);
+        }
+        $user = UserModel::create([
+            "UUID_USER" => Str::uuid(),
+            "UUID_RULE" => 'user-2019',
+            "EMAIL" => $request->get("EMAIL"),
+            "PASSWORD" => Hash::make($request->get("PASSWORD")),
+            "PHONE" => $request->get("PHONE")
+        ]);
+        if($user)
+        {
+            $token = JWTAuth::fromUser($user);
+            UserModel::where("EMAIL",$user->EMAIL)->update([
+                "USER_TOKEN" => $token
+            ]);
+            return response()->json([
+                "success" => true,
+                "message" => "Đăng ký tài khoản thành công",
+                "data" => $token
+            ], 200);
+        }
+        else {
+            return response()->json([
+                "success" => false,
+                "message" => "Đăng ký thất bại!",
+            ], 200);
+        }
     }
 
     public function login(Request $request)
@@ -124,23 +170,76 @@ class UserController extends Controller
                 $user = UserModel::where("EMAIL",$request->get('EMAIL'))->update([
                     "USER_TOKEN" => $token
                 ]);
-                return response()->json($token, 200);
+                return response()->json([
+                    "success" => true,
+                    "message" => "Đăng nhập thành công!",
+                    "data" => $token
+                ], 200);
             }
-            return response()->json(false, 401);
+            return response()->json([
+                "success" => false,
+                "message" => "Mật khẩu sai!"
+            ], 200);
         }
-        return response()->json(false, 404);
+        return response()->json([
+            "success" => false,
+            "message" => "Email sai!"
+        ], 200);
         
     }
 
+    public function facebook(Request $request)
+    {
+        $user = UserModel::where([
+            ["EMAIL",$request->get("EMAIL")],
+        ])->first();
+        if($user)
+        {
+            UserModel::where([
+                ["EMAIL",$request->get("EMAIL")],
+            ])->update([
+                "USER_TOKEN" => $request->get("TOKEN")
+            ]);
+            return response()->json('success', 200);
+        }
+    }
+
+    public function manager(Request $request,$id)
+    {
+        if($request->has('api_token'))
+        {
+            $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
+            if($user)
+            {
+                UserModel::where([
+                    ["UUID_USER",$id],
+                    ["USER_TOKEN",$request->get("api_token")]])->update([
+                        "UUID_RULE" => 'manager-2019'
+                    ]);
+                return response()->json([
+                    "success" => true,
+                    "message" => "Đăng ký trờ thành chủ quán thành công!"
+                ], 200);
+            }
+        }
+    }
     /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id,Request $request)
     {
-       
+       if($request->has('api_token'))
+       {
+           $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
+           if($user)
+           {
+                $profile = UserModel::where("UUID_USER",$id)->first();
+                return response()->json($profile, 200);
+           }
+       }
 
     }
 
@@ -164,7 +263,43 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if($request->has('api_token'))
+        {
+            $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
+            if($user)
+            {
+                $data = $request->all();
+                if($request->has("AVATAR"))
+                {
+                    $file = $request->file('AVATAR');
+                    $name = $file->getClientOriginalName();
+                    $file->move(public_path().'/upload/avatars/', $file->getClientOriginalName());
+                    $path = '/upload/avatars/'.$name;
+                    $data["AVATAR"] = $path;
+                    UserModel::where("UUID_USER",$id)->update([
+                        "AVATAR" =>  $data["AVATAR"]
+                    ]);
+                }
+                UserModel::where("UUID_USER",$id)->update([
+                    "DISPLAY_NAME" => $request->get("DISPLAY_NAME"),
+                    "PHONE" => $request->get("PHONE"),
+                    "ADDRESS" => $request->get("ADDRESS"),
+                    "BIRTH_DAY" => $request->get("BIRTH_DAY")
+                ]);
+                return response()->json([
+                    "success" => true,
+                    "message" => "Cập nhật thành công"
+                ], 200);
+            }
+            return response()->json([
+                "success" => false,
+                "message" => "Authorizon"
+            ], 200);
+        }
+        return response()->json([
+            "success" => false,
+            "message" => "Authorizon"
+        ], 200);
     }
 
     /**

@@ -203,7 +203,7 @@ class UserController extends Controller
             return response()->json('success', 200);
         }
         UserModel::create([
-            "EMAIL" => $request->get("EMAIL"),
+            "EMAIL" => $request->get("EMAIL")
             "USER_TOKEN" => $request->get("TOKEN")
         ]);
         return response()->json('success', 200);

@@ -17,8 +17,6 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 Route::group(['prefix' => '/v1'], function () {
-    Route::post('/facebook','UserController@facebook')->middleware('cors');
-    Route::post('/google','UserController@google')->middleware('cors');
     Route::get('/user','UserController@index')->middleware('cors');
     Route::get('/user/{id}/manager-karaoke','UserController@manager')->middleware('cors');
     Route::post('/user/{id}/update','UserController@update')->middleware('cors');
@@ -84,4 +82,6 @@ Route::group(['prefix' => '/v1'], function () {
 
     //user view kararoke
     Route::post('/view_karaoke','ViewKaraokeController@store')->middleware('cors');
+
+
 });
