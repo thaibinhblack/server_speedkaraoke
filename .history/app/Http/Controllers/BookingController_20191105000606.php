@@ -281,11 +281,7 @@ class BookingController extends Controller
                 "UUID_USER" => $user->UUID_USER,
                 "TIME_START" => $request->get("TIME_START")
             ]);
-            return response()->json([
-                'success' => true,
-                'message' => 'Đặt phòng thành công',
-                'result' => $booking
-            ], 200);
+            return response()->json($booking, 200,);
         }
     }
     public function checkmobile(Request $request)

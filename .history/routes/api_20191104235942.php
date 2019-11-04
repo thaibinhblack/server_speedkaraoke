@@ -74,7 +74,6 @@ Route::group(['prefix' => '/v1'], function () {
     Route::post('/rule','RuleController@store')->middleware('cors');
 
     //booking
-    Route::post('bookingmobile','BookingController@bookingmobile')->middleware('cors');
     Route::get('check_booking','BookingController@checkmobile')->middleware('cors');
     Route::get('/booking','BookingController@index')->middleware('cors');
     Route::get('/booking/{id}/check','BookingController@check')->middleware('cors');

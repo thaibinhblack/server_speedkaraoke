@@ -269,25 +269,6 @@ class BookingController extends Controller
         }
     }
 
-    public function bookingmobile(Request $request)
-    {
-        $check = $this->token($request->get('api_token'));
-        if($check)
-        {
-            $booking = BookingModel::create([
-                "UUID_BOOKING" => Str::uuid(),
-                "UUID_ROOM_BAR_KARAOKE" => $request->get("UUID_ROOM_BAR_KARAOKE"),
-                "UUID_BAR_KARAOKE" => $request->get("UUID_BAR_KARAOKE"),
-                "UUID_USER" => $user->UUID_USER,
-                "TIME_START" => $request->get("TIME_START")
-            ]);
-            return response()->json([
-                'success' => true,
-                'message' => 'Đặt phòng thành công',
-                'result' => $booking
-            ], 200);
-        }
-    }
     public function checkmobile(Request $request)
     {
         $check = $this->token($request->get('api_token'));
@@ -296,7 +277,6 @@ class BookingController extends Controller
             $booking = BookingModel::where("UUID_ROOM_BAR_KARAOKE",$request->get("UUID_ROOM_BAR_KARAOKE"))->first();
             return response()->json($booking, 200);
         }
-        return response()->json($check, 200);
     }
     /**
      * Remove the specified resource from storage.
