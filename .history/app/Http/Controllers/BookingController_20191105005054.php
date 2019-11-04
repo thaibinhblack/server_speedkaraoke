@@ -294,16 +294,7 @@ class BookingController extends Controller
         $check = $this->token($request->get('api_token'));
         if($check)
         {
-            $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
-            $booking = BookingModel::where([
-                ["UUID_USER", $user->UUID_USER],
-                ["UUID_ROOM_BAR_KARAOKE",$request->get("UUID_ROOM_BAR_KARAOKE")]
-            ])->orderBy("CREATED_AT","DESC")->first();
-            return response()->json($booking, 200);
-        }
-        else {
-            $booking = BookingModel::where("UUID_ROOM_BAR_KARAOKE",$request->get("UUID_ROOM_BAR_KARAOKE"))
-            ->orderBy("CREATED_AT","DESC")->first();
+            $booking = BookingModel::where("UUID_ROOM_BAR_KARAOKE",$request->get("UUID_ROOM_BAR_KARAOKE"))->first();
             return response()->json($booking, 200);
         }
         return response()->json($check, 200);

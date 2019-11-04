@@ -298,13 +298,12 @@ class BookingController extends Controller
             $booking = BookingModel::where([
                 ["UUID_USER", $user->UUID_USER],
                 ["UUID_ROOM_BAR_KARAOKE",$request->get("UUID_ROOM_BAR_KARAOKE")]
-            ])->orderBy("CREATED_AT","DESC")->first();
+            ])->first();
             return response()->json($booking, 200);
         }
         else {
             $booking = BookingModel::where("UUID_ROOM_BAR_KARAOKE",$request->get("UUID_ROOM_BAR_KARAOKE"))
-            ->orderBy("CREATED_AT","DESC")->first();
-            return response()->json($booking, 200);
+            ->where('STATUS',1)->first();
         }
         return response()->json($check, 200);
     }
