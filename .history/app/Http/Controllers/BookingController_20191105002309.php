@@ -15,11 +15,16 @@ class BookingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+
+    }
     public function token($token)
     {
         $user = UserModel::where("USER_TOKEN",$token)->first();
         if($user)
         {
+            $this->$UUID_USER = $user->UUID_USER;
             return true;
         }
         return false;
@@ -298,30 +303,6 @@ class BookingController extends Controller
             return response()->json($booking, 200);
         }
         return response()->json($check, 200);
-    }
-
-    public function cancle(Request $request)
-    {
-        $check = $this->token($request->get('api_token'));
-        if($check)
-        {
-            $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
-            $booking = BookingModel::where([
-                ["UUID_USER",$user->UUID_USER],
-                ["UUID_ROOM_BAR_KARAOKE",$request->get('UUID_ROOM_BAR_KARAOKE')],
-                ["STATUS",0]
-            ])->update([
-                'STATUS' => 4
-            ]);
-            return response()->json([
-                'success' => true,
-                'message' => 'Bạn vừa hủy đặt phòng',
-            ], 200);
-        }
-        return response()->json([
-            'success' => false,
-            'message' => 'Lỗi xác thực',
-        ], 401);
     }
     /**
      * Remove the specified resource from storage.

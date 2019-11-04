@@ -313,15 +313,7 @@ class BookingController extends Controller
             ])->update([
                 'STATUS' => 4
             ]);
-            return response()->json([
-                'success' => true,
-                'message' => 'Bạn vừa hủy đặt phòng',
-            ], 200);
         }
-        return response()->json([
-            'success' => false,
-            'message' => 'Lỗi xác thực',
-        ], 401);
     }
     /**
      * Remove the specified resource from storage.
