@@ -54,14 +54,14 @@ class ProvinceController extends Controller
         }
         if($province)
         {
-            $ID_PROVINCE = $province->ID_PROVINCE;
+            $ID_PROVINCE = $province->ID_PROVINCE
         }
         else {
-            $ID_PROVINCE = 12;
+            $ID_PROVINCE = 12
         }
         $karaoke = BarKaraokeModel::join('table_province','table_bar_karaoke.ID_PROVINCE','table_province.ID_PROVINCE')
             ->join('table_district','table_bar_karaoke.ID_DISTRICT','table_district.ID_DISTRICT')
-            ->where("table_bar_karaoke.ID_PROVINCE",$ID_PROVINCE)
+            ->where("table_bar_karaoke.ID_PROVINCE",)
             ->select('table_bar_karaoke.*','table_province.NAME_PROVINCE','table_district.NAME_DISTRICT')
             ->orderBy("NUMBER_REATED","desc","STAR_RATING","desc")
             ->get();
