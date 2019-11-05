@@ -91,9 +91,9 @@ class LikeKaraokeMobile extends Controller
                         [ "UUID_ROOM_BAR_KARAOKE" , $request->get("UUID_ROOM_BAR_KARAOKE")],
                         ["TYPE" , 2]
                     ])->update([
-                        "NUMBER_LIKE" => $room_like->NUMBER_LIKE + 1
+                        "NUMBER_LIKE" => $karaoke_like->NUMBER_LIKE + 1
                     ]);
-                    return response()->json($room_like, 200);
+                    return response()->json($karaoke_like, 200);
                 }
                 $rating = RatingLikeModel::create([
                     "UUID_RATING_LIKE" => Str::uuid(),
