@@ -132,11 +132,14 @@ class RoomBarKaraokeController extends Controller
                     
                 }
                 
-                RoomBarKaraokeModel::where("UUID_ROOM_BAR_KARAOKE",$id)->update([
-                    "NAME_ROOM_BAR_KARAOKE" => $request->get("NAME_ROOM_BAR_KARAOKE"),
-                    "RENT_COST" => $request->get("RENT_COST"),
-                    "CONTENT" => $request->get("CONTENT")
-                ]);
+                if($request->has("NAME_ROOM_BAR_KARAOKE"))
+                {
+                    RoomBarKaraokeModel::where("UUID_ROOM_BAR_KARAOKE",$id)->update([
+                        "NAME_ROOM_BAR_KARAOKE" => $request->get("NAME_ROOM_BAR_KARAOKE"),
+                        "RENT_COST" => $request->get("RENT_COST"),
+                        "CONTENT" => $request->get("CONTENT")
+                    ]);
+                }
                 HistoryModel::create([
                     "UUID_HISTORY_ACTION" => Str::uuid(),
                     "UUID_USER" => $user->UUID_USER,
