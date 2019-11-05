@@ -27,7 +27,6 @@ class LikeKaraokeMobile extends Controller
                 ->join("table_bar_karaoke","tale_rating_like.UUID_BAR_KARAOKE","table_bar_karaoke.UUID_BAR_KARAOKE")
                 ->join("table_province","table_bar_karaoke.ID_PROVINCE","table_province.ID_PROVINCE")
                 ->join("table_district","table_bar_karaoke.ID_DISTRICT","table_district.ID_DISTRICT")
-                ->orderBy("tale_rating_like.NUMBER_LIKE","DESC")
                 ->select("table_bar_karaoke.*","table_province.NAME_PROVINCE","table_district.NAME_DISTRICT")
                 ->get();
                 return response()->json($karaokes, 200);
