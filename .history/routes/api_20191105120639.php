@@ -92,9 +92,6 @@ Route::group(['prefix' => '/v1'], function () {
     Route::post('/view_karaoke','ViewKaraokeController@store')->middleware('cors');
 
     //like mobile
-    Route::get('like_karaoke', 'LikeKaraokeMobile@index')->middleware('cors');
-    Route::post('like_mobile', 'LikeKaraokeMobile@store')->middleware('cors');
 
-    //SMS
-    Route::post('sms','SMSController@store')->middleware('cors');
+    Route::post('like_mobile', 'LikeKaraokeMobile@store')->middleware('cors');
 });
