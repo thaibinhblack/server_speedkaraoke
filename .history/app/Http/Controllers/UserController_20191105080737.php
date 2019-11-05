@@ -114,15 +114,13 @@ class UserController extends Controller
             }
             return response()->json([
                 'success' => false,
-                'message' => 'Authorizon',
-                'status' => 404
-            ], 200);
+                'message' => 'Authorizon'
+            ], 404);
         }
         return response()->json([
             'success' => false,
-            'message' => 'Authorizon',
-            'status' => 401
-        ], 200);
+            'message' => 'Authorizon'
+        ], 404);
         
     }
 
