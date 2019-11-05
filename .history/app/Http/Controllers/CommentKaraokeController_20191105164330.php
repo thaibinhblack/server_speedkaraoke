@@ -14,17 +14,9 @@ class CommentKaraokeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        if($request->has("UUID_BAR_KARAOKE"))
-        {
-            $comments = CommentKaraokeModel::join("table_user","table_comment_karaoke.UUID_USER","table_user.UUID_USER")
-            ->where("UUID_BAR_KARAOKE",$request->get("UUID_BAR_KARAOKE"))
-            ->select("table_user.AVATAR","table_comment_karaoke.*")
-            ->orderBy("CREATED_AT","DESC")
-            ->get();
-            return response()->json($comments, 200);
-        }
+        //
     }
 
     /**
@@ -72,12 +64,10 @@ class CommentKaraokeController extends Controller
      */
     public function show($id)
     {
-        $comments = CommentKaraokeModel::join("table_user","table_comment_karaoke.UUID_USER","table_user.UUID_USER")
-        ->where("UUID_BAR_KARAOKE",$id)
-        ->select("table_user.AVATAR","table_comment_karaoke.*")
-        ->orderBy("CREATED_AT","DESC")
+        $comments = CommentKaraokeModel::where("UUID_BAR_KARAOKE",$id)
+        ->join("table_user","table_comment_karaoke.UUID_USER","table_user.UUID_USER")
+        ->select("table_comment_karaoke.*","table_user.AVATAR","table_user.EMAIL")
         ->get();
-        return response()->json($comments, 200);
     }
 
     /**

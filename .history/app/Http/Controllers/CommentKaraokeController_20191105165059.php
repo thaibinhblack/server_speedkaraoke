@@ -73,11 +73,11 @@ class CommentKaraokeController extends Controller
     public function show($id)
     {
         $comments = CommentKaraokeModel::join("table_user","table_comment_karaoke.UUID_USER","table_user.UUID_USER")
-        ->where("UUID_BAR_KARAOKE",$id)
-        ->select("table_user.AVATAR","table_comment_karaoke.*")
-        ->orderBy("CREATED_AT","DESC")
-        ->get();
-        return response()->json($comments, 200);
+            ->where("UUID_BAR_KARAOKE",$ID)
+            ->select("table_user.AVATAR","table_comment_karaoke.*")
+            ->orderBy("CREATED_AT","DESC")
+            ->get();
+            return response()->json($comments, 200);
     }
 
     /**
