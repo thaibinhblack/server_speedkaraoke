@@ -37,7 +37,7 @@ Route::group(['prefix' => '/v1'], function () {
     Route::post('karaoke','BarKaraokeController@store')->middleware('cors');
     Route::put('karaoke/{id}','BarKaraokeController@update')->middleware('cors');
     //comment karaoke
-    Route::get('comment/{id}','CommentKaraokeController@show')->middleware('cors');
+    Route::get('copmment/{id}','CommentKaraokeController@show')->middleware('cors');
     Route::post('comment','CommentKaraokeController@store')->middleware('cors');
     //image
     Route::get('image/{id}','ImageController@show')->middleware('cors');
