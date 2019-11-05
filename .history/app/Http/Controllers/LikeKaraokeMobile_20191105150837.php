@@ -20,13 +20,11 @@ class LikeKaraokeMobile extends Controller
             $user = UserModel::where("USER_TOKEN",$request->get("api_token"))->first();
             if($user)
             {
-                $karaokes = RatingLikeModel::where([
+                $karaokes = RatingLikeModel::join("table_bar_karaoke, tale_rating_like.UUID_BAR_KARAOKE","table_bar_karaoke.UUID_BAR_KARAOKE")
+                ->where([
                     ["tale_rating_like.UUID_USER",$user->UUID_USER],
                     ["tale_rating_like.TYPE",2]
-                ])
-                ->join("table_bar_karaoke","tale_rating_like.UUID_BAR_KARAOKE","table_bar_karaoke.UUID_BAR_KARAOKE")
-                ->select("table_bar_karaoke.*")
-                ->get();
+                ])->get();
                 return response()->json($karaokes, 200);
             }
         }
