@@ -22,12 +22,12 @@ class SMSController extends Controller
             '+84825468971',
             array(
                 // A Twilio phone number you purchased at twilio.com/console
-                'from' => '+17752009952',
+                'from' => '+84825468971',
                 // the body of the text message you'd like to send
                 'body' => 'Hey Jenny! Good luck on the bar exam!'
             )
         );
-        return response()->json($result, 200);
+        return response()->json('123', 200);
     }
 
     /**

@@ -14,7 +14,10 @@
         "guzzlehttp/guzzle": "^6.4",
         "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0",
+        "nexmo/client": "@beta",
+        "nexmo/laravel": "^2.1",
         "rahulreghunath/textlocal": "^1.0",
+        "twilio/sdk": "^5.38",
         "tymon/jwt-auth": "dev-develop"
     },
     "require-dev": {

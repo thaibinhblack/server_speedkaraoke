@@ -14,20 +14,9 @@ class SMSController extends Controller
      */
     public function index()
     {
-        $sid = 'ACcd6bb7cabf87808423aa180a9e1acc49';
-        $token = 'b4cfc1ed2a215abc88db477577001447';
-        $client = new Client($sid, $token);
-        $result  = $client->messages->create(
-            // the number you'd like to send the message to
-            '+84825468971',
-            array(
-                // A Twilio phone number you purchased at twilio.com/console
-                'from' => '+17752009952',
-                // the body of the text message you'd like to send
-                'body' => 'Hey Jenny! Good luck on the bar exam!'
-            )
-        );
-        return response()->json($result, 200);
+        $sid = 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+$token = 'your_auth_token';
+$client = new Client($sid, $token);
     }
 
     /**

@@ -27,7 +27,7 @@ class SMSController extends Controller
                 'body' => 'Hey Jenny! Good luck on the bar exam!'
             )
         );
-        return response()->json($result, 200);
+        return response()->json('123', 200);
     }
 
     /**

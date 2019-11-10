@@ -322,6 +322,7 @@ class BookingController extends Controller
         else {
             $booking = BookingModel::where("UUID_ROOM_BAR_KARAOKE",$request->get("UUID_ROOM_BAR_KARAOKE"))
             ->orderBy("CREATED_AT","DESC")->first();
+            return response()->json($booking, 200);
             if($booking)
             {   
                 return response()->json($booking, 200);
