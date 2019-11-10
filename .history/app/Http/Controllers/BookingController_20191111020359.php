@@ -43,7 +43,7 @@ class BookingController extends Controller
                         ->join("table_room_bar_karaoke","table_booking.UUID_ROOM_BAR_KARAOKE","table_room_bar_karaoke.UUID_ROOM_BAR_KARAOKE")
                         ->where("UUID_USER",$user->UUID_USER)
                         ->select("table_booking.*","table_bar_karaoke.LOGO_BAR_KARAOKE","table_bar_karaoke.NAME_BAR_KARAOKE","table_bar_karaoke.URL_SAFE","table_room_bar_karaoke.NAME_ROOM_BAR_KARAOKE","table_room_bar_karaoke.RENT_COST")
-                        ->orderBy("CREATED_AT","desc")
+                        ->orderBy("table_booking.CREATED_AT","desc")
                         ->get();
                         return response()->json($bookings, 200);
                    }

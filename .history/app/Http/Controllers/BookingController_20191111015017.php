@@ -42,9 +42,7 @@ class BookingController extends Controller
                         $bookings = BookingModel::join("table_bar_karaoke","table_booking.UUID_BAR_KARAOKE","table_bar_karaoke.UUID_BAR_KARAOKE")
                         ->join("table_room_bar_karaoke","table_booking.UUID_ROOM_BAR_KARAOKE","table_room_bar_karaoke.UUID_ROOM_BAR_KARAOKE")
                         ->where("UUID_USER",$user->UUID_USER)
-                        ->select("table_booking.*","table_bar_karaoke.LOGO_BAR_KARAOKE","table_bar_karaoke.NAME_BAR_KARAOKE","table_bar_karaoke.URL_SAFE","table_room_bar_karaoke.NAME_ROOM_BAR_KARAOKE","table_room_bar_karaoke.RENT_COST")
-                        ->orderBy("CREATED_AT","desc")
-                        ->get();
+                        ->select("table_booking.*","table_bar_karaoke.LOGO_BAR_KARAOKE","table_bar_karaoke.NAME_BAR_KARAOKE","table_bar_karaoke.URL_SAFE","table_room_bar_karaoke.NAME_ROOM_BAR_KARAOKE","table_room_bar_karaoke.RENT_COST")->get();
                         return response()->json($bookings, 200);
                    }
                    else if($request->get('status') == 'check')
@@ -205,10 +203,13 @@ class BookingController extends Controller
         }
         if($request->has('api_token'))
         {
-            $booking = BookingModel::where("table_booking.UUID_BOOKING", $id)
-                ->join('table_bar_karaoke','table_booking.UUID_BAR_KARAOKE','table_bar_karaoke.UUID_BAR_KARAOKE')
+            $booking = BookingModel::where("UUID_ROOM_BAR_KARAOKE", $id)
+            ->join('table_bar_karaoke','table_booking.UUID_BAR_KARAOKE','table_bar_karaoke.UUID_BAR_KARAOKE')
                 ->join("table_room_bar_karaoke","table_booking.UUID_ROOM_BAR_KARAOKE","table_room_bar_karaoke.UUID_ROOM_BAR_KARAOKE")
-                ->select('table_booking.*','table_bar_karaoke.NAME_BAR_KARAOKE',
+                ->select('table_booking.*','table_user.AVATAR', 'table_user.DISPLAY_NAME','table_user.GENDER', 
+                'table_user.BIRTH_DAY','table_user.PHONE', 'table_user.EMAIL','table_user.RELIABILITY', 
+                'table_user.NUMBER_BOOK','table_user.CANCLE_BOOK', 'table_user.EMAIL','table_user.RELIABILITY',
+                'table_user.NUMBER_BOOK','table_bar_karaoke.NAME_BAR_KARAOKE', 
                 'table_room_bar_karaoke.NAME_ROOM_BAR_KARAOKE', 'table_room_bar_karaoke.RENT_COST')->first();
             return response()->json($booking, 200);
         }

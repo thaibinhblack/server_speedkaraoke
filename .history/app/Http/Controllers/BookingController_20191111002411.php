@@ -9,8 +9,6 @@ use App\model\HistoryModel;
 use App\model\BarKaraokeModel;
 use Illuminate\Support\Str;
 use DateTime;
-use Twilio\Rest\Client;
-
 class BookingController extends Controller
 {
     /**
@@ -42,9 +40,7 @@ class BookingController extends Controller
                         $bookings = BookingModel::join("table_bar_karaoke","table_booking.UUID_BAR_KARAOKE","table_bar_karaoke.UUID_BAR_KARAOKE")
                         ->join("table_room_bar_karaoke","table_booking.UUID_ROOM_BAR_KARAOKE","table_room_bar_karaoke.UUID_ROOM_BAR_KARAOKE")
                         ->where("UUID_USER",$user->UUID_USER)
-                        ->select("table_booking.*","table_bar_karaoke.LOGO_BAR_KARAOKE","table_bar_karaoke.NAME_BAR_KARAOKE","table_bar_karaoke.URL_SAFE","table_room_bar_karaoke.NAME_ROOM_BAR_KARAOKE","table_room_bar_karaoke.RENT_COST")
-                        ->orderBy("CREATED_AT","desc")
-                        ->get();
+                        ->select("table_booking.*","table_bar_karaoke.LOGO_BAR_KARAOKE","table_bar_karaoke.NAME_BAR_KARAOKE","table_bar_karaoke.URL_SAFE","table_room_bar_karaoke.NAME_ROOM_BAR_KARAOKE","table_room_bar_karaoke.RENT_COST")->get();
                         return response()->json($bookings, 200);
                    }
                    else if($request->get('status') == 'check')
@@ -150,7 +146,20 @@ class BookingController extends Controller
                 ])->first();
                 if(!$check_booking)
                 {
-                   
+                    $karaoke = BarKaraokeModel::where("UUID_BAR_KARAOKE",$request->get("UUID_BAR_KARAOKE"))->first();
+                    $sid = 'ACcd6bb7cabf87808423aa180a9e1acc49';
+                    $token = 'b4cfc1ed2a215abc88db477577001447';
+                    $client = new Client($sid, $token);
+                    $result  = $client->messages->create(
+                        // the number you'd like to send the message to
+                        '+84'.$karaoke->PHONE_BAR_KARAOKE,
+                        array(
+                            // A Twilio phone number you purchased at twilio.com/console
+                            'from' => '+17752009952',
+                            // the body of the text message you'd like to send
+                            'body' => 'Co khach hang dat phong ben chi nhanh '.$karaoke->NAME_BAR_KARAOKE.' cua ban!'
+                        )
+                    );
                     $booking = BookingModel::create([
                         "UUID_BOOKING" => Str::uuid(),
                         "UUID_ROOM_BAR_KARAOKE" => $request->get("UUID_ROOM_BAR_KARAOKE"),
@@ -202,15 +211,6 @@ class BookingController extends Controller
                 'success' => false,
                 'message' => 'Không có booking'
             ], 200);
-        }
-        if($request->has('api_token'))
-        {
-            $booking = BookingModel::where("table_booking.UUID_BOOKING", $id)
-                ->join('table_bar_karaoke','table_booking.UUID_BAR_KARAOKE','table_bar_karaoke.UUID_BAR_KARAOKE')
-                ->join("table_room_bar_karaoke","table_booking.UUID_ROOM_BAR_KARAOKE","table_room_bar_karaoke.UUID_ROOM_BAR_KARAOKE")
-                ->select('table_booking.*','table_bar_karaoke.NAME_BAR_KARAOKE',
-                'table_room_bar_karaoke.NAME_ROOM_BAR_KARAOKE', 'table_room_bar_karaoke.RENT_COST')->first();
-            return response()->json($booking, 200);
         }
         $bookings = BookingModel::where("UUID_ROOM_BAR_KARAOKE", $id)->get();
         return response()->json([
@@ -300,20 +300,6 @@ class BookingController extends Controller
         if($check)
         {
             $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
-            $karaoke = BarKaraokeModel::where("UUID_BAR_KARAOKE",$request->get("UUID_BAR_KARAOKE"))->first();
-            $sid = 'ACcd6bb7cabf87808423aa180a9e1acc49';
-            $token = 'b4cfc1ed2a215abc88db477577001447';
-            $client = new Client($sid, $token);
-            $result  = $client->messages->create(
-                // the number you'd like to send the message to
-                '+84'.$karaoke->PHONE_BAR_KARAOKE,
-                array(
-                    // A Twilio phone number you purchased at twilio.com/console
-                    'from' => '+17752009952',
-                    // the body of the text message you'd like to send
-                    'body' => 'Co khach hang dat phong ben chi nhanh '.$karaoke->NAME_BAR_KARAOKE.' cua ban!'
-                )
-            );
             $booking = BookingModel::create([
                 "UUID_BOOKING" => Str::uuid(),
                 "UUID_ROOM_BAR_KARAOKE" => $request->get("UUID_ROOM_BAR_KARAOKE"),

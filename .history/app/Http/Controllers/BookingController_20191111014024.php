@@ -32,6 +32,7 @@ class BookingController extends Controller
         if($request->has('api_token'))
         {
             $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
+            res
             if($user)
             {
                 // return response()->json($request->all(), 200);
@@ -42,9 +43,7 @@ class BookingController extends Controller
                         $bookings = BookingModel::join("table_bar_karaoke","table_booking.UUID_BAR_KARAOKE","table_bar_karaoke.UUID_BAR_KARAOKE")
                         ->join("table_room_bar_karaoke","table_booking.UUID_ROOM_BAR_KARAOKE","table_room_bar_karaoke.UUID_ROOM_BAR_KARAOKE")
                         ->where("UUID_USER",$user->UUID_USER)
-                        ->select("table_booking.*","table_bar_karaoke.LOGO_BAR_KARAOKE","table_bar_karaoke.NAME_BAR_KARAOKE","table_bar_karaoke.URL_SAFE","table_room_bar_karaoke.NAME_ROOM_BAR_KARAOKE","table_room_bar_karaoke.RENT_COST")
-                        ->orderBy("CREATED_AT","desc")
-                        ->get();
+                        ->select("table_booking.*","table_bar_karaoke.LOGO_BAR_KARAOKE","table_bar_karaoke.NAME_BAR_KARAOKE","table_bar_karaoke.URL_SAFE","table_room_bar_karaoke.NAME_ROOM_BAR_KARAOKE","table_room_bar_karaoke.RENT_COST")->get();
                         return response()->json($bookings, 200);
                    }
                    else if($request->get('status') == 'check')
@@ -205,12 +204,7 @@ class BookingController extends Controller
         }
         if($request->has('api_token'))
         {
-            $booking = BookingModel::where("table_booking.UUID_BOOKING", $id)
-                ->join('table_bar_karaoke','table_booking.UUID_BAR_KARAOKE','table_bar_karaoke.UUID_BAR_KARAOKE')
-                ->join("table_room_bar_karaoke","table_booking.UUID_ROOM_BAR_KARAOKE","table_room_bar_karaoke.UUID_ROOM_BAR_KARAOKE")
-                ->select('table_booking.*','table_bar_karaoke.NAME_BAR_KARAOKE',
-                'table_room_bar_karaoke.NAME_ROOM_BAR_KARAOKE', 'table_room_bar_karaoke.RENT_COST')->first();
-            return response()->json($booking, 200);
+            $bookings = BookingModel::where("UUID_ROOM_BAR_KARAOKE", $id)->first();
         }
         $bookings = BookingModel::where("UUID_ROOM_BAR_KARAOKE", $id)->get();
         return response()->json([
