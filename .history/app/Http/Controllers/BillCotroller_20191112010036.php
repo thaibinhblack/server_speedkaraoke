@@ -80,7 +80,7 @@ class BillCotroller extends Controller
                                 // A Twilio phone number you purchased at twilio.com/console
                                 'from' => '+17752009952',
                                 // the body of the text message you'd like to send
-                                'body' => 'BAN DA SU DUNG '.$request->get('PRICE_BILL').' SPEED COIN, SPEED COIN CON LAI '.$coin
+                                'body' => 'BAN DA SU DUNG '.$request->get('PRICE_BILL').' SPEED COIN, SPEED CON LAI '.$coin
                             )
                         );
                         $bill = BillModel::create([
