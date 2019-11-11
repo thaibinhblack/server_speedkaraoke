@@ -104,8 +104,4 @@ Route::group(['prefix' => '/v1'], function () {
 
     //SMS
     Route::get('/sms','SMSController@index')->middleware('cors');
-
-    //bill
-    Route::post('bill','BillCotroller@store')->middleware('cors');
-
 });

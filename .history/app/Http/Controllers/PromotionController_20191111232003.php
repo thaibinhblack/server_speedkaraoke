@@ -157,9 +157,7 @@ class PromotionController extends Controller
         ->where([
             ["table_detail_promotion_karaoke.UUID_BAR_KARAOKE",$id],
             ["table_promotion.CODE_PROMOTION",$request->get("CODE_PROMOTION")],
-            ["table_promotion.USE_PROMOTION", ">=", 1],
-            ["DATE_STARTED", "<=",Carbon::today()->toDateString()],
-            ["DATE_END", ">=", Carbon::today()->toDateString()]
+            [".table_promotion.USE_PROMOTION", ">=", 1]
         ])->first();
         if($code)
         {

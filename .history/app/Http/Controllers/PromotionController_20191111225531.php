@@ -10,7 +10,6 @@ use App\model\DetailPromotionKaraokeModel;
 use Illuminate\Support\Str;
 use DB;
 use Carbon\Carbon;
-use DateTime;
 class PromotionController extends Controller
 {
     /**
@@ -69,7 +68,6 @@ class PromotionController extends Controller
                     "VALUE_SAFE_OFF" => $request->get("VALUE_SAFE_OFF"),
                     "CODE_PROMOTION" => $request->get("CODE_PROMOTION"),
                     "NUMBER_PROMOTION" => $request->get("NUMBER_PROMOTION"),
-                    "USE_PROMOTION" => $request->get("NUMBER_PROMOTION"),
                     "USER_CREATE" => $user->EMAIL,
                     "DATE_STARTED" => $request->get("DATE_STARTED"),
                     "DATE_END" => $request->get("DATE_END")
@@ -149,35 +147,19 @@ class PromotionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-
-    public function check_promotion(Request $request,$id)
+    public function update(Request $request, $id)
     {
-        $date =  new DateTime();
-        $code  = DetailPromotionKaraokeModel::join("table_promotion","table_detail_promotion_karaoke.UUID_PROMOTION","table_promotion.UUID_PROMOTION")
-        ->where([
-            ["table_detail_promotion_karaoke.UUID_BAR_KARAOKE",$id],
-            ["table_promotion.CODE_PROMOTION",$request->get("CODE_PROMOTION")],
-            ["table_promotion.USE_PROMOTION", ">=", 1],
-            ["DATE_STARTED", "<=",Carbon::today()->toDateString()],
-            ["DATE_END", ">=", Carbon::today()->toDateString()]
-        ])->first();
-        if($code)
-        {
-            return response()->json([
-                'success' => true,
-                'message' => 'Code hợp lệ',
-                'result' => $code
-            ], 200);
-        }
-        return response()->json([
-            'success' => false,
-            'message' => 'Code không hợp lệ',
-            'result' => null
-        ], 200);
+        //
     }
 
-    public function use_promotion(Request $request,$id)
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
     {
-
+        //
     }
 }

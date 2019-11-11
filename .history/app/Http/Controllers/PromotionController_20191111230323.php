@@ -153,11 +153,11 @@ class PromotionController extends Controller
     public function check_promotion(Request $request,$id)
     {
         $date =  new DateTime();
-        $code  = DetailPromotionKaraokeModel::join("table_promotion","table_detail_promotion_karaoke.UUID_PROMOTION","table_promotion.UUID_PROMOTION")
+        $code  = DetailPromotionKaraokeModel::join("tabke_promotion","table_detail_promotion_karaoke.UUID_PROMOTION","tabke_promotion.UUID_PROMOTION")
         ->where([
             ["table_detail_promotion_karaoke.UUID_BAR_KARAOKE",$id],
             ["table_promotion.CODE_PROMOTION",$request->get("CODE_PROMOTION")],
-            ["table_promotion.USE_PROMOTION", ">=", 1],
+            ["USE_PROMOTION", ">=", 1],
             ["DATE_STARTED", "<=",Carbon::today()->toDateString()],
             ["DATE_END", ">=", Carbon::today()->toDateString()]
         ])->first();

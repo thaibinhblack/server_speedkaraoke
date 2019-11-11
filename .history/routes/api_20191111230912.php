@@ -91,7 +91,7 @@ Route::group(['prefix' => '/v1'], function () {
     //promotion
     Route::get('/promotion','PromotionController@index')->middleware('cors');
     Route::get('/promotion/{id}','PromotionController@show')->middleware('cors');
-    Route::get('/promotion/{id}/check','PromotionController@check_promotion')->middleware('cors');
+    Route::get('/promotion/{id}/check','PromotionController@check')->middleware('cors');
     Route::get('/promotion/{id}/karaoke','PromotionController@karaoke')->middleware('cors');
     Route::post('/promotion','PromotionController@store')->middleware('cors');
 
@@ -104,8 +104,4 @@ Route::group(['prefix' => '/v1'], function () {
 
     //SMS
     Route::get('/sms','SMSController@index')->middleware('cors');
-
-    //bill
-    Route::post('bill','BillCotroller@store')->middleware('cors');
-
 });
