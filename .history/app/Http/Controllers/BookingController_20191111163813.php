@@ -299,7 +299,7 @@ class BookingController extends Controller
         }
     }
 
-    public function bookingmobile(Request $request)
+    public function bookingmobile(Request $request,$id)
     {
         $check = $this->token($request->get('api_token'));
         if($check)
@@ -317,6 +317,53 @@ class BookingController extends Controller
                     'from' => '+17752009952',
                     // the body of the text message you'd like to send
                     'body' => 'Co khach hang dat phong ben chi nhanh '.$karaoke->NAME_BAR_KARAOKE.' cua ban!'
+                    
+                )
+            );
+            $booking = BookingModel::where("UUID_BOOKING",$id)->first();
+            $start = new DateTime($booking->TIME_START);
+            
+            if($date->format('H') < $start->format('H'))
+            {
+                $end = ($date->format('H') + 24)*60 + $date->format('i');
+            }
+            else {
+                $end = $date->format('H')*60 + $date->format('i');
+            }
+            $start = $start->format('H')*60 + $start->format('i');
+            BookingModel::where("UUID_BOOKING",$id)->update([
+                "STATUS" => $request->get("status"),
+                'TIME_END' => $date->format('H:i:s'),
+                'TOTAL_TIME' => $end - $start
+            ]);
+            $booking = BookingModel::where("UUID_BOOKING",$id)->first();
+            $user_booking = UserModel::where("UUID_USER",$booking->UUID_USER)->first();
+            UserModel::where("UUID_USER",$booking->UUID_USER)->update([
+                'RELIABILITY' => $user_booking->RELIABILITY + 2,
+                'NUMBER_BOOK' => $user_booking->NUMBER_BOOK + 1 
+            ]);
+            return response()->json($booking, 200);
+        }
+    }
+
+    public function paypal(Request $request)
+    {
+        $check = $this->token($request->get('api_token'));
+        if($check)
+        {
+            $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
+            $karaoke = BarKaraokeModel::where("UUID_BAR_KARAOKE",$request->get("UUID_BAR_KARAOKE"))->first();
+            $sid = 'ACcd6bb7cabf87808423aa180a9e1acc49';
+            $token = 'b4cfc1ed2a215abc88db477577001447';
+            $client = new Client($sid, $token);
+            $result  = $client->messages->create(
+                // the number you'd like to send the message to
+                '+84'.$karaoke->PHONE_BAR_KARAOKE,
+                array(
+                    // A Twilio phone number you purchased at twilio.com/console
+                    'from' => '+17752009952',
+                    // the body of the text message you'd like to send
+                    'body' => 'Khach hang yeu cau thanh toan!'
                 )
             );
             $booking = BookingModel::create([
@@ -329,67 +376,6 @@ class BookingController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Đặt phòng thành công',
-                'result' => $booking
-            ], 200);
-        }
-    }
-
-    public function paypal(Request $request,$id)
-    {
-        $check = $this->token($request->get('api_token'));
-        if($check)
-        {
-            $booking = BookingModel::where("UUID_BOOKING",$id)->first();
-            $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
-            $karaoke = BarKaraokeModel::where("UUID_BAR_KARAOKE",$booking->UUID_BAR_KARAOKE)->first();
-            $sid = 'ACcd6bb7cabf87808423aa180a9e1acc49';
-            $token = 'b4cfc1ed2a215abc88db477577001447';
-            $client = new Client($sid, $token);
-            $result  = $client->messages->create(
-                // the number you'd like to send the message to
-                '+84'.$karaoke->PHONE_BAR_KARAOKE,
-                array(
-                    // A Twilio phone number you purchased at twilio.com/console
-                    'from' => '+17752009952',
-                    // the body of the text message you'd like to send
-                    'body' => 'KHACH HANG YEU CAU THANH TOAN!'
-                )
-            );
-            $date =  new DateTime();    
-            
-            $start = new DateTime($booking->TIME_START);
-            
-            if($date->format('H') < $start->format('H'))
-            {
-                $end = ($date->format('H') + 24)*60 + $date->format('i');
-            }
-            else {
-                $end = $date->format('H')*60 + $date->format('i');
-            }
-            $start = $start->format('H')*60 + $start->format('i');
-            BookingModel::where("UUID_BOOKING",$id)->update([
-                "STATUS" => 2,
-                'TIME_END' => $date->format('H:i:s'),
-                'TOTAL_TIME' => $end - $start
-            ]);
-            $booking = BookingModel::where("UUID_BOOKING",$id)
-                ->join('table_user','table_booking.UUID_USER','table_user.UUID_USER')
-                ->join('table_bar_karaoke','table_booking.UUID_BAR_KARAOKE','table_bar_karaoke.UUID_BAR_KARAOKE')
-                ->join("table_room_bar_karaoke","table_booking.UUID_ROOM_BAR_KARAOKE","table_room_bar_karaoke.UUID_ROOM_BAR_KARAOKE")
-                ->select('table_booking.*','table_user.AVATAR', 'table_user.DISPLAY_NAME','table_user.GENDER', 
-                'table_user.BIRTH_DAY','table_user.PHONE', 'table_user.EMAIL','table_user.RELIABILITY', 
-                'table_user.NUMBER_BOOK','table_user.CANCLE_BOOK', 'table_user.EMAIL','table_user.RELIABILITY',
-                'table_user.NUMBER_BOOK','table_bar_karaoke.NAME_BAR_KARAOKE', 
-                'table_room_bar_karaoke.NAME_ROOM_BAR_KARAOKE', 'table_room_bar_karaoke.RENT_COST')
-                ->first();
-            $user_booking = UserModel::where("UUID_USER",$booking->UUID_USER)->first();
-            UserModel::where("UUID_USER",$booking->UUID_USER)->update([
-                'RELIABILITY' => $user_booking->RELIABILITY + 2,
-                'NUMBER_BOOK' => $user_booking->NUMBER_BOOK + 1 
-            ]);
-            return response()->json([
-                'success' => true,
-                'message' => 'Cập nhật booking thành công!',
                 'result' => $booking
             ], 200);
         }
