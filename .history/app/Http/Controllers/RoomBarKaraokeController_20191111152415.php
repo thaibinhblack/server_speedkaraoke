@@ -8,7 +8,6 @@ use App\model\BarKaraokeModel;
 use Illuminate\Support\Str;
 use App\model\UserModel;
 use App\model\HistoryModel;
-use App\model\RatingLikeModel;
 class RoomBarKaraokeController extends Controller
 {
     /**
@@ -171,17 +170,17 @@ class RoomBarKaraokeController extends Controller
                     if(!$rating)
                     {
                         $room = RoomBarKaraokeModel::where("UUID_ROOM_BAR_KARAOKE",$id)->first();
-                        $rating = $room->STAR_RATING * $room->NUMBER_RATED;
-                        $rating = $rating + (float)$request->get('rating');
-                        $rating = $rating / ($room->NUMBER_RATED + 1);
-                        RoomBarKaraokeModel::where("UUID_ROOM_BAR_KARAOKE",$id)->update([
+                        $rating = $karaoke->STAR_RATING * $karaoke->NUMBER_REATED;
+                        $rating = $rating + (int)$request->get('rating');
+                        $rating = $rating / ($karaoke->NUMBER_REATED + 1);
+                        BarkaraokeModel::where("UUID_ROOM_BAR_KARAOKE",$id)->update([
                             'STAR_RATING' => $rating,
-                            'NUMBER_RATED' => $room->NUMBER_RATED + 1
+                            'NUMBER_REATED' => $karaoke->NUMBER_REATED + 1
                         ]);
                         RatingLikeModel::create([
                             "UUID_RATING_LIKE" => Str::uuid(),
                             "UUID_USER" => $user->UUID_USER,
-                            "UUID_ROOM_BAR_KARAOKE" => $room->UUID_ROOM_BAR_KARAOKE
+                            "UUID_ROOM_BAR_KARAOKE" => $karaoke->UUID_ROOM_BAR_KARAOKE
                         ]);
                         return response()->json([
                             'success' => true,
