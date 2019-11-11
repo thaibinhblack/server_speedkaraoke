@@ -304,9 +304,8 @@ class BookingController extends Controller
         $check = $this->token($request->get('api_token'));
         if($check)
         {
-            $booking = BookingModel::where("UUID_BOOKING",$id)->first();
             $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
-            $karaoke = BarKaraokeModel::where("UUID_BAR_KARAOKE",$booking->UUID_BAR_KARAOKE )->first();
+            $karaoke = BarKaraokeModel::where("UUID_BAR_KARAOKE",$request->get("UUID_BAR_KARAOKE"))->first();
             $sid = 'ACcd6bb7cabf87808423aa180a9e1acc49';
             $token = 'b4cfc1ed2a215abc88db477577001447';
             $client = new Client($sid, $token);
@@ -317,11 +316,10 @@ class BookingController extends Controller
                     // A Twilio phone number you purchased at twilio.com/console
                     'from' => '+17752009952',
                     // the body of the text message you'd like to send
-                    'body' => 'Co khach hang dat phong ben chi nhanh '.$karaoke->NAME_BAR_KARAOKE.' cua ban!'
-                    
+                    'body' => 'Khach hang yeu cau thanh toan!'
                 )
             );
-            
+            $booking = BookingModel::where("UUID_BOOKING",$id)->first();
             $start = new DateTime($booking->TIME_START);
             
             if($date->format('H') < $start->format('H'))
@@ -333,7 +331,7 @@ class BookingController extends Controller
             }
             $start = $start->format('H')*60 + $start->format('i');
             BookingModel::where("UUID_BOOKING",$id)->update([
-                "STATUS" => 2,
+                "STATUS" => $request->get("status"),
                 'TIME_END' => $date->format('H:i:s'),
                 'TOTAL_TIME' => $end - $start
             ]);
@@ -364,7 +362,7 @@ class BookingController extends Controller
                     // A Twilio phone number you purchased at twilio.com/console
                     'from' => '+17752009952',
                     // the body of the text message you'd like to send
-                    'body' => 'Khach hang yeu cau thanh toan!'
+                    'body' => 'Co khach hang dat phong ben chi nhanh '.$karaoke->NAME_BAR_KARAOKE.' cua ban!'
                 )
             );
             $booking = BookingModel::create([

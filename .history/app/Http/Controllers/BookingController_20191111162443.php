@@ -304,9 +304,8 @@ class BookingController extends Controller
         $check = $this->token($request->get('api_token'));
         if($check)
         {
-            $booking = BookingModel::where("UUID_BOOKING",$id)->first();
             $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
-            $karaoke = BarKaraokeModel::where("UUID_BAR_KARAOKE",$booking->UUID_BAR_KARAOKE )->first();
+            $karaoke = BarKaraokeModel::where("UUID_BAR_KARAOKE",$request->get("UUID_BAR_KARAOKE"))->first();
             $sid = 'ACcd6bb7cabf87808423aa180a9e1acc49';
             $token = 'b4cfc1ed2a215abc88db477577001447';
             $client = new Client($sid, $token);
@@ -321,7 +320,7 @@ class BookingController extends Controller
                     
                 )
             );
-            
+            $booking = BookingModel::where("UUID_BOOKING",$id)->first();
             $start = new DateTime($booking->TIME_START);
             
             if($date->format('H') < $start->format('H'))
@@ -333,7 +332,7 @@ class BookingController extends Controller
             }
             $start = $start->format('H')*60 + $start->format('i');
             BookingModel::where("UUID_BOOKING",$id)->update([
-                "STATUS" => 2,
+                "STATUS" => $request->get("status"),
                 'TIME_END' => $date->format('H:i:s'),
                 'TOTAL_TIME' => $end - $start
             ]);

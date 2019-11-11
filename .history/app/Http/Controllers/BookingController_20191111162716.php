@@ -333,7 +333,7 @@ class BookingController extends Controller
             }
             $start = $start->format('H')*60 + $start->format('i');
             BookingModel::where("UUID_BOOKING",$id)->update([
-                "STATUS" => 2,
+                "STATUS" => $request->get("status"),
                 'TIME_END' => $date->format('H:i:s'),
                 'TOTAL_TIME' => $end - $start
             ]);

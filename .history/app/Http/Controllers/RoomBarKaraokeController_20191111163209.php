@@ -36,13 +36,10 @@ class RoomBarKaraokeController extends Controller
                     ])->first();
                 return response()->json($room, 200);
             }
-        }  
-
-        else if($request->has("UUID_BAR_KARAOKE"))
-        {
-            $rooms = RoomBarKaraokeModel::where('UUID_BAR_KARAOKE',$request->get('UUID_BAR_KARAOKE'))->orderBy('CREATED_AT','asc')->get();
-            return response()->json($rooms, 200);
-        }
+        }   
+    
+        
+        return response()->json($request->all(), 200);
         
     }
 
