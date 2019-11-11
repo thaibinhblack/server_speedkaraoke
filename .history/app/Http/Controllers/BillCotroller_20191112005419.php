@@ -86,7 +86,7 @@ class BillCotroller extends Controller
                             ["STATUS",2]
                             ])->update([
                                 'STATUS' => 3
-                            ]);
+                            ])
                         return response()->json([
                             'success' => true,
                             'message' => 'Thanh toán thành công!',
