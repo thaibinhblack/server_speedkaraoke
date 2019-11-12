@@ -22,11 +22,7 @@ class BillCotroller extends Controller
             $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
             if($user)
             {
-                $bills = BillModel::join('table_bar_karaoke','table_bill.UUID_BAR_KARAOKE','table_bar_karaoke.UUID_BAR_KARAOKE')
-                ->where("UUID_USER",$user->UUID_USER)
-                ->select('table_bill.*','table_bar_karaoke.NAME_BAR_KARAOKE','table_bar_karaoke.LOGO_BAR_KARAOKE')
-                ->orderBy('table_bill.CREATED_AT','DESC')
-                ->get();
+                $bills = BookingModel::where("UUID_USER",$user->UUID_USER)->get();
                 return response()->json([
                     'success' => true,
                     'message' => 'Danh sách hóa đơn',

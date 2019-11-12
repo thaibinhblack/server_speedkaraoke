@@ -15,25 +15,9 @@ class BillCotroller extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        if($request->has('api_token'))
-        {
-            $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
-            if($user)
-            {
-                $bills = BillModel::join('table_bar_karaoke','table_bill.UUID_BAR_KARAOKE','table_bar_karaoke.UUID_BAR_KARAOKE')
-                ->where("UUID_USER",$user->UUID_USER)
-                ->select('table_bill.*','table_bar_karaoke.NAME_BAR_KARAOKE','table_bar_karaoke.LOGO_BAR_KARAOKE')
-                ->orderBy('table_bill.CREATED_AT','DESC')
-                ->get();
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Danh sách hóa đơn',
-                    'results' => $bills
-                ], 200);
-            }
-        }
+        //
     }
 
     /**
@@ -109,14 +93,15 @@ class BillCotroller extends Controller
                             "CODE_PROMOTION" => $request->get("CODE_PROMOTION"),
                             "PAYPAL" => $request->get("PAYPAL")
                         ]);
-                        $booking = BookingModel::where("UUID_BOOKING",$request->get("UUID_BOOKING"))->update([
+                        BookingModel::where([
+                            ["UUID_BOOKING",$request->get("UUID_BOOKING")],
+                            ])->update([
                                 'STATUS' => 3
                             ]);
                         return response()->json([
                             'success' => true,
                             'message' => 'Thanh toán thành công!',
-                            'result' => $bill,
-                            'booking' => $booking
+                            'result' => $bill
                         ], 200);
                     }
                     else {
@@ -140,7 +125,7 @@ class BillCotroller extends Controller
      */
     public function show($id)
     {
-        
+        //
     }
 
     /**
