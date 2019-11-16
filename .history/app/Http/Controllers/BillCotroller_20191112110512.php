@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\model\BillModel;
 use App\model\BookingModel;
 use App\model\BarKaraokeModel;
-use App\model\RoomBarKaraokeModel;
 use Illuminate\Support\Str;
 use App\model\UserModel;
 use Twilio\Rest\Client;
@@ -54,13 +53,7 @@ class BillCotroller extends Controller
             $client = new Client($sid, $token);
             $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
             if($user)
-            {    $karaoke = RoomBarKaraokeModel::join('table_bar_karaoke','table_room_bar_karaoke.UUID_BAR_KARAOKE','table_bar_karaoke.UUID_BAR_KARAOKE')
-                    ->join('table_detail_manager_bar_karaoke','table_bar_karaoke.UUID_BAR_KARAOKE','table_detail_manager_bar_karaoke.UUID_BAR_KARAOKE')
-                    ->where("table_room_bar_karaoke.UUID_ROOM_BAR_KARAOKE", $request->get("UUID_ROOM_BAR_KARAOKE"))
-                    ->select('table_room_bar_karaoke.NAME_ROOM_BAR_KARAOKE','table_bar_karaoke.PHONE_BAR_KARAOKE'
-                    ,'table_detail_manager_bar_karaoke.UUID_USER')
-                    ->first();
-                    // return response()->json($karaoke, 200);
+            {
                 if($request->get("PAYPAL") == 1)
                 {
                     $bill = BillModel::create([
@@ -73,7 +66,7 @@ class BillCotroller extends Controller
                         "CODE_PROMOTION" => $request->get("CODE_PROMOTION"),
                         "PAYPAL" => $request->get("PAYPAL")
                     ]);
-                   
+                    $karaoke = BarKaraokeModel::where("UUID_BAR_KARAOKE", $request->get("UUID_BAR_KARAOKE"))->first();
                     $result  = $client->messages->create(
                         // the number you'd like to send the message to
                         '+84'.$karaoke->PHONE_BAR_KARAOKE,
@@ -81,7 +74,7 @@ class BillCotroller extends Controller
                             // A Twilio phone number you purchased at twilio.com/console
                             'from' => '+17752009952',
                             // the body of the text message you'd like to send
-                            'body' => 'KHACH HANG YEU CAU THANH TOAN TRUC TIEP TAI PHONG '.$karaoke->NAME_ROOM_BAR_KARAOKE
+                            'body' => 'KHACH HANG YEU CAU THANH TOAN TRUC TIEP!'
                         )
                     );
                     return response()->json([
@@ -96,21 +89,7 @@ class BillCotroller extends Controller
                         UserModel::where("UUID_USER",$user->UUID_USER)->update([
                             'SPEED_COIN' => $user->SPEED_COIN -  $request->get("PRICE_BILL")
                         ]);
-                        $user_manager = UserModel::where("UUID_USER",$karaoke->UUID_USER)->first();
-                        UserModel::where("UUID_USER",$karaoke->UUID_USER)->update([
-                            "SPEED_COIN" => $user_manager->SPEED_COIN + $request->get("PRICE_BILL")
-                        ]);
                         $coin = $user->SPEED_COIN - $request->get("PRICE_BILL");
-                        $result  = $client->messages->create(
-                            // the number you'd like to send the message to
-                            '+84'.$karaoke->PHONE_BAR_KARAOKE,
-                            array(
-                                // A Twilio phone number you purchased at twilio.com/console
-                                'from' => '+17752009952',
-                                // the body of the text message you'd like to send
-                                'body' => 'TK SPEED COIN CUA BAN DUOC THEM '.$request->get("PRICE_BILL").' DO KHACH HANG DUNG SPPED COIN THANH TOAN'
-                            )
-                        );
                         $result  = $client->messages->create(
                             // the number you'd like to send the message to
                             '+84'.$user->PHONE,
@@ -118,7 +97,7 @@ class BillCotroller extends Controller
                                 // A Twilio phone number you purchased at twilio.com/console
                                 'from' => '+17752009952',
                                 // the body of the text message you'd like to send
-                                'body' => 'BAN DA SU DUNG '.$request->get('PRICE_BILL').' SPEED COIN DE THANH TOAN, SPEED COIN CON LAI '.$coin
+                                'body' => 'BAN DA SU DUNG '.$request->get('PRICE_BILL').' SPEED COIN, SPEED COIN CON LAI '.$coin
                             )
                         );
                         $bill = BillModel::create([

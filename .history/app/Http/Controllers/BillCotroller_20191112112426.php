@@ -56,11 +56,11 @@ class BillCotroller extends Controller
             if($user)
             {    $karaoke = RoomBarKaraokeModel::join('table_bar_karaoke','table_room_bar_karaoke.UUID_BAR_KARAOKE','table_bar_karaoke.UUID_BAR_KARAOKE')
                     ->join('table_detail_manager_bar_karaoke','table_bar_karaoke.UUID_BAR_KARAOKE','table_detail_manager_bar_karaoke.UUID_BAR_KARAOKE')
-                    ->where("table_room_bar_karaoke.UUID_ROOM_BAR_KARAOKE", $request->get("UUID_ROOM_BAR_KARAOKE"))
+                    ->where("UUID_ROOM_BAR_KARAOKE", $request->get("UUID_ROOM_BAR_KARAOKE"))
                     ->select('table_room_bar_karaoke.NAME_ROOM_BAR_KARAOKE','table_bar_karaoke.PHONE_BAR_KARAOKE'
                     ,'table_detail_manager_bar_karaoke.UUID_USER')
                     ->first();
-                    // return response()->json($karaoke, 200);
+                    return response()->json($karaoke, 200);
                 if($request->get("PAYPAL") == 1)
                 {
                     $bill = BillModel::create([

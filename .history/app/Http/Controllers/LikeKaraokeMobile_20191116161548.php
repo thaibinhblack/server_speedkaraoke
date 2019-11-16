@@ -84,33 +84,29 @@ class LikeKaraokeMobile extends Controller
                     ]);
                     return response()->json($rating, 200);
                 }
-                if($request->has('UUID_ROOM_BAR_KARAOKE'))
+                $room_like = RatingLikeModel::where([
+                    ["UUID_USER" , $user->UUID_USER],
+                    [ "UUID_ROOM_BAR_KARAOKE" , $request->get("UUID_ROOM_BAR_KARAOKE")],
+                    ["TYPE" , 2]
+                ])->first();
+                if($room_like)
                 {
-                    $room_like = RatingLikeModel::where([
+                    RatingLikeModel::where([
                         ["UUID_USER" , $user->UUID_USER],
                         [ "UUID_ROOM_BAR_KARAOKE" , $request->get("UUID_ROOM_BAR_KARAOKE")],
                         ["TYPE" , 2]
-                    ])->first();
-                    if($room_like)
-                    {
-                        RatingLikeModel::where([
-                            ["UUID_USER" , $user->UUID_USER],
-                            [ "UUID_ROOM_BAR_KARAOKE" , $request->get("UUID_ROOM_BAR_KARAOKE")],
-                            ["TYPE" , 2]
-                        ])->update([
-                            "NUMBER_LIKE" => $room_like->NUMBER_LIKE + 1
-                        ]);
-                        return response()->json($room_like, 200);
-                    }
-                    $rating = RatingLikeModel::create([
-                        "UUID_RATING_LIKE" => Str::uuid(),
-                        "UUID_USER" => $user->UUID_USER,
-                        "UUID_ROOM_BAR_KARAOKE" => $request->get("UUID_ROOM_BAR_KARAOKE"),
-                        "TYPE" => 2
+                    ])->update([
+                        "NUMBER_LIKE" => $room_like->NUMBER_LIKE + 1
                     ]);
-                    return response()->json($rating, 200);
+                    return response()->json($room_like, 200);
                 }
-                
+                $rating = RatingLikeModel::create([
+                    "UUID_RATING_LIKE" => Str::uuid(),
+                    "UUID_USER" => $user->UUID_USER,
+                    "UUID_ROOM_BAR_KARAOKE" => $request->get("UUID_ROOM_BAR_KARAOKE"),
+                    "TYPE" => 2
+                ]);
+                return response()->json($rating, 200);
             }
         }
     }

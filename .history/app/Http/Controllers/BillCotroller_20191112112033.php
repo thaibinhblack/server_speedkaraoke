@@ -55,12 +55,10 @@ class BillCotroller extends Controller
             $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
             if($user)
             {    $karaoke = RoomBarKaraokeModel::join('table_bar_karaoke','table_room_bar_karaoke.UUID_BAR_KARAOKE','table_bar_karaoke.UUID_BAR_KARAOKE')
-                    ->join('table_detail_manager_bar_karaoke','table_bar_karaoke.UUID_BAR_KARAOKE','table_detail_manager_bar_karaoke.UUID_BAR_KARAOKE')
-                    ->where("table_room_bar_karaoke.UUID_ROOM_BAR_KARAOKE", $request->get("UUID_ROOM_BAR_KARAOKE"))
-                    ->select('table_room_bar_karaoke.NAME_ROOM_BAR_KARAOKE','table_bar_karaoke.PHONE_BAR_KARAOKE'
-                    ,'table_detail_manager_bar_karaoke.UUID_USER')
+                    ->join('table_detail_manager_bar_karaoke','table_room_bar_karaoke.UUID_BAR_KARAOKE','table_detail_manager_bar_karaoke.UUID_BAR_KARAOKE')
+                    ->where("UUID_ROOM_BAR_KARAOKE", $request->get("UUID_ROOM_BAR_KARAOKE"))
+                    ->select('table_room_bar_karaoke.NAME_ROOM_BAR_KARAOKE','table_bar_karaoke.PHONE_BAR_KARAOKE','table_detail_manager_bar_karaoke.UUID_USER')
                     ->first();
-                    // return response()->json($karaoke, 200);
                 if($request->get("PAYPAL") == 1)
                 {
                     $bill = BillModel::create([
@@ -98,7 +96,7 @@ class BillCotroller extends Controller
                         ]);
                         $user_manager = UserModel::where("UUID_USER",$karaoke->UUID_USER)->first();
                         UserModel::where("UUID_USER",$karaoke->UUID_USER)->update([
-                            "SPEED_COIN" => $user_manager->SPEED_COIN + $request->get("PRICE_BILL")
+                            "SPEED_COINT" => $user_manager->SPEED_COIN + $request->get("PRICE_BILL")
                         ]);
                         $coin = $user->SPEED_COIN - $request->get("PRICE_BILL");
                         $result  = $client->messages->create(
@@ -108,7 +106,7 @@ class BillCotroller extends Controller
                                 // A Twilio phone number you purchased at twilio.com/console
                                 'from' => '+17752009952',
                                 // the body of the text message you'd like to send
-                                'body' => 'TK SPEED COIN CUA BAN DUOC THEM '.$request->get("PRICE_BILL").' DO KHACH HANG DUNG SPPED COIN THANH TOAN'
+                                'body' => 'TK SPEED COIN CUA BAN DUOC THEM '.$request->get("PRICE_BILL").' DO KHACH HANG DUNG SPPED COIN THANH TOAN';
                             )
                         );
                         $result  = $client->messages->create(

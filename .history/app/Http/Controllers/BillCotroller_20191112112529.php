@@ -60,7 +60,7 @@ class BillCotroller extends Controller
                     ->select('table_room_bar_karaoke.NAME_ROOM_BAR_KARAOKE','table_bar_karaoke.PHONE_BAR_KARAOKE'
                     ,'table_detail_manager_bar_karaoke.UUID_USER')
                     ->first();
-                    // return response()->json($karaoke, 200);
+                    return response()->json($karaoke, 200);
                 if($request->get("PAYPAL") == 1)
                 {
                     $bill = BillModel::create([
