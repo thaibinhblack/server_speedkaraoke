@@ -264,12 +264,27 @@ class UserController extends Controller
             }
         }
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
+    public function change_password(Request $request)
+    {
+        if($request->has("api_token"))
+        {
+            $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
+            if($user)
+            {
+                $new_password = Hash::make($request->get('new_password'));
+                $result = UserModel::where("UUID_USER",$user->UUID_USER)->update([
+                    "PASSWORD" => $new_password
+                ]);
+                if($result == 1)
+                {
+                    return response()->json('Thay đổi mật khẩu thành công!', 200);
+                }
+                return response()->json('Cập nhật mật khẩu thất bại!', 200);
+            }
+        }
+    }
+
     public function show($id,Request $request)
     {
        if($request->has('api_token'))

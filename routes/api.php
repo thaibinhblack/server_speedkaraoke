@@ -27,6 +27,7 @@ Route::group(['prefix' => '/v1'], function () {
     Route::post('/user','UserController@store')->middleware('cors');
     Route::post('/resignter','UserController@resignter')->middleware('cors');
     Route::post('/user/login','UserController@login')->middleware('cors');
+    Route::post('/change_password','UserController@change_password')->middleware('cors');
     //karaoke
     Route::get('/map','BarKaraokeController@map')->middleware('cors');
     Route::get('karaoke','BarKaraokeController@index')->middleware('cors');
