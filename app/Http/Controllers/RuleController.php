@@ -47,12 +47,12 @@ class RuleController extends Controller
                     "NAME_RULE" => $request->get("NAME_RULE"),
                     "USER_CREATE" => $user->EMAIL
                 ]);
-                HistoryModel::create([
-                    "UUID_HISTORY" => Str::uuid(),
-                    "UUID_USER" => $user->UUID_USER,
-                    "NAME_HISTORY" => "Chức năng",
-                    "CONTENT_ACTION" => $user->EMAIL.' tạo chức năng '.$request->get("NAME_RULE")
-                ]);
+                // HistoryModel::create([
+                //     "UUID_HISTORY" => Str::uuid(),
+                //     "UUID_USER" => $user->UUID_USER,
+                //     "NAME_HISTORY" => "Chức năng",
+                //     "CONTENT_ACTION" => $user->EMAIL.' tạo chức năng '.$request->get("NAME_RULE")
+                // ]);
                 return response()->json($rule, 200);
             }
         }
