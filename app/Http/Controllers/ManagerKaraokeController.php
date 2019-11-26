@@ -22,7 +22,7 @@ class ManagerKaraokeController extends Controller
            {
                 $managers = ManagerKaraoke::join("table_bar_karaoke","table_detail_manager_bar_karaoke.UUID_BAR_KARAOKE","table_bar_karaoke.UUID_BAR_KARAOKE")
                 ->join("table_user","table_detail_manager_bar_karaoke.UUID_USER","table_user.UUID_USER")
-                ->where("table_detail_manager_bar_karaoke.UUID_USER",$user->UUID_USER)
+                ->where("ManagerKaraokeController.USER_CREATE",$user->EMAIL)
                 ->select("table_detail_manager_bar_karaoke.*","table_user.*","table_bar_karaoke.NAME_BAR_KARAOKE")
                 ->get();
                 return response()->json($managers, 200);
