@@ -41,7 +41,7 @@ class DetailFunctionController extends Controller
                 $p_id_cn = $request->get("UUID_FUNCTION");
                 $FUNCTIONS = $request->get("FUNCTIONS");
                 
-                $view = $create = $edit = $delete = $export = $p_id_cn.'.0';
+                $view = $create = $edit = $delete = $export = $p_id_cn.'0';
                 $array = explode(',', $FUNCTIONS);
                 foreach ($array as $value) {
                     if($value == $p_id_cn.'.'.'1')
