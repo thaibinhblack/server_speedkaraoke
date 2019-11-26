@@ -91,7 +91,7 @@ class DetailFunctionController extends Controller
                     return response()->json($rule_function, 200);
                 }
             }
-            return response()->json('User không đủ quyền', 200);
+            return response()->json($user, 200);
         }
     }
 
