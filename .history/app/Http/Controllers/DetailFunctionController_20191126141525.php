@@ -101,13 +101,9 @@ class DetailFunctionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request,$id)
+    public function show($id)
     {
-        if($request->has('api_token'))
-        {
-            $rules = DetailFunction::where("UUID_RULE",$id)->get();
-            return response()->json($rules, 200);
-        }
+        //
     }
 
     /**
