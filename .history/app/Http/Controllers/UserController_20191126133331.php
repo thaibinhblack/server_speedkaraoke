@@ -293,12 +293,11 @@ class UserController extends Controller
             if($user)
             {  
                 $file = $request->file('AVATAR');
-                $uuid = Str::uuid();
                 $name = $file->getClientOriginalName();
                 $file->move(public_path().'/upload/avatars/', $file->getClientOriginalName());
                 $path = '/upload/avatars/'.$name;
                 $user_create = UserModel::create([
-                    'UUID_USER' => $uuid,
+                    'UUID_USER' => Str::uuid(),
                     "EMAIL" => $request->get('EMAIL'),
                     "PASSWORD" => Hash::make( $request->get("PASSWORD")),
                     'AVATAR' => $path,
@@ -308,13 +307,7 @@ class UserController extends Controller
                     'BIRTH_DAY' => $request->get('BIRTH_DAY'),
                     'GENDER' => $request->get('GENDER'),
                     'UUID_RULE' => $request->get('UUID_RULE'),
-                ]);
-                ManagerKaraoke::create([
-                    "UUID_USER" => $uuid,
-                    "UUID_BAR_KARAOKE" => $request->get("UUID_BAR_KARAOKE"),
-                    "USER_CREATE" => $user->EMAIL
-                ]);
-                return response()->json($user_create, 200);
+                ])
             }
         }
     }

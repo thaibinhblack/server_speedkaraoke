@@ -314,7 +314,7 @@ class UserController extends Controller
                     "UUID_BAR_KARAOKE" => $request->get("UUID_BAR_KARAOKE"),
                     "USER_CREATE" => $user->EMAIL
                 ]);
-                return response()->json($user_create, 200);
+                
             }
         }
     }
