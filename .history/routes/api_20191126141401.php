@@ -72,7 +72,7 @@ Route::group(['prefix' => '/v1'], function () {
     Route::get("/group","GroupFunctionController@index")->middleware('cors');
     //function
     Route::get('/function',"FunctionController@index")->middleware('cors');
-    Route::post('/function_rule',"DetailFunctionController@store")->middleware('cors');
+    Route::post('/function_rule',"FunctionController@store")->middleware('cors');
     //manager
     Route::get('/manager','ManagerKaraokeController@index')->middleware('cors');
     Route::get('/manager/{id}','ManagerKaraokeController@show')->middleware('cors');
