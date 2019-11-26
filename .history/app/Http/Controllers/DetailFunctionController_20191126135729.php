@@ -33,10 +33,43 @@ class DetailFunctionController extends Controller
             if($user)
             {
                 
-                DetailFunction::create([
-                    "UUID_RULE" => $request->get("UUID_RULE"),
-                    "UUID_FUNCTION" => $request->get("UUID_FUNCTION")
-                ]);
+               $check_rule = DetailFunction::where([
+                   ["UUID_RULE",$request->get("UUID_RULE")],
+                   ["UUID_FUNCTION", $request->get("UUID_FUNCTION")]
+               ])->first();
+            $p_id_rule = $request->get("UUID_RULE");
+            $p_id_cn = $request->get("UUID_FUNCTION");
+            $FUNCTIONS = $request->get("FUNCTIONS");
+            
+            $view = $create = $edit = $delete = $export = $p_id_cn.'0';
+            $array = explode(',', $FUNCTIONS);
+            foreach ($array as $value) {
+                if($value == $p_id_cn.'.'.'1')
+                {
+                    $view = $value;
+                }
+                else if($value == $p_id_cn.'.'.'2')
+                {
+                    $create = $value;
+                }
+                else if($value == $p_id_cn.'.'.'3')
+                {
+                    $edit = $value;
+                }
+                else if($value == $p_id_cn.'.'.'4')
+                {
+                    $delete = $value;
+                }
+                else if($value == $p_id_cn.'.'.'5')
+                {
+                    $export = $value;
+                }
+            }
+            
+               if($check_rule)
+               {
+                   
+               }
             }
         }
     }

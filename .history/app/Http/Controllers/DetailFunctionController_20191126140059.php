@@ -68,7 +68,7 @@ class DetailFunctionController extends Controller
                 
                 if(!$check_rule)
                 {
-                    $rule_function = DetailFunction::create([
+                    DetailFunction::create([
                         'UUID_RULE' => $request->get("UUID_RULE"),
                         "UUID_FUNCTION" => $request->get("UUID_FUNCTION"),
                         "FUNCTION_VIEW" => $view,
@@ -76,18 +76,7 @@ class DetailFunctionController extends Controller
                         "FUNCTION_EDIT" => $edit,
                         "FUNCTION_DELETE" => $delete
                     ]);
-                    return response()->json($rule_function, 200);
-                }
-                else {
-                    $rule_function = DetailFunction::where([
-                        ['UUID_RULE',$request->get("UUID_RULE")],
-                        ["UUID_FUNCTION",$request->get("UUID_FUNCTION")]
-                    ])->update([
-                        "FUNCTION_VIEW" => $view,
-                        "FUNCTION_CREATE" => $create,
-                        "FUNCTION_EDIT" => $edit,
-                        "FUNCTION_DELETE" => $delete
-                    ]);
+
                 }
             }
         }
