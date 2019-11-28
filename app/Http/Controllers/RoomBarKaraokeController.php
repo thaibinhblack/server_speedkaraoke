@@ -71,7 +71,7 @@ class RoomBarKaraokeController extends Controller
             {
                 $room = RoomBarKaraokeModel::create([
                     "UUID_ROOM_BAR_KARAOKE" => Str::uuid(),
-                    "UUID_ROOM_BAR_KARAOKE" => $request->get("UUID_ROOM_BAR_KARAOKE"),
+                    "UUID_BAR_KARAOKE" => $request->get("UUID_BAR_KARAOKE"),
                     "NAME_ROOM_BAR_KARAOKE" => $request->get("NAME_ROOM_BAR_KARAOKE"),
                     "RENT_COST" => $request->get("RENT_COST"),
                     "CONTENT" => $request->get("CONTENT"),

@@ -8,6 +8,7 @@ use App\model\BarKaraokeModel;
 use Illuminate\Support\Str;
 use App\model\UserModel;
 use App\model\HistoryModel;
+use App\model\RatingLikeModel;
 class RoomBarKaraokeController extends Controller
 {
     /**
@@ -17,10 +18,10 @@ class RoomBarKaraokeController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->has('UUID_BAR_KARAOKE'))
+        if($request->has('UUID_ROOM_BAR_KARAOKE'))
         {
             
-            $rooms = RoomBarKaraokeModel::where('UUID_BAR_KARAOKE',$request->get('UUID_BAR_KARAOKE'))->orderBy('CREATED_AT','asc')->get();
+            $rooms = RoomBarKaraokeModel::where('UUID_ROOM_BAR_KARAOKE',$request->get('UUID_ROOM_BAR_KARAOKE'))->orderBy('CREATED_AT','asc')->get();
             return response()->json($rooms, 200);
         }
         else if($request->has('URL_SAFE'))
@@ -30,15 +31,18 @@ class RoomBarKaraokeController extends Controller
             if($karaoke)
             {   
                 $room = RoomBarKaraokeModel::where([
-                    ['UUID_BAR_KARAOKE',$karaoke->UUID_BAR_KARAOKE],
+                    ['UUID_ROOM_BAR_KARAOKE',$karaoke->UUID_ROOM_BAR_KARAOKE],
                     ['NAME_ROOM_BAR_KARAOKE',$request->get('NAME_ROOM_BAR_KARAOKE')]
                     ])->first();
                 return response()->json($room, 200);
             }
-        }   
-    
-        
-        return response()->json($request->all(), 200);
+        }  
+
+        else if($request->has("UUID_BAR_KARAOKE"))
+        {
+            $rooms = RoomBarKaraokeModel::where('UUID_BAR_KARAOKE',$request->get('UUID_BAR_KARAOKE'))   ->orderBy('CREATED_AT','asc')->get();
+            return response()->json($rooms, 200);
+        }
         
     }
 
@@ -131,20 +135,15 @@ class RoomBarKaraokeController extends Controller
                     ]);
                     
                 }
-                if($request->has("BANNER_BAR_KARAOKE"))
+                
+                if($request->has("NAME_ROOM_BAR_KARAOKE"))
                 {
-                    $file = $request->file("BANNER_BAR_KARAOKE");
-                    $file->move(public_path().'/upload/karaoke/', $file->getClientOriginalName());
                     RoomBarKaraokeModel::where("UUID_ROOM_BAR_KARAOKE",$id)->update([
-                        "IMAGE_ROOM_BAR_KARAOKE" => '/upload/karaoke/'.$file->getClientOriginalName(),
+                        "NAME_ROOM_BAR_KARAOKE" => $request->get("NAME_ROOM_BAR_KARAOKE"),
+                        "RENT_COST" => $request->get("RENT_COST"),
+                        "CONTENT" => $request->get("CONTENT")
                     ]);
-                    
                 }
-                RoomBarKaraokeModel::where("UUID_ROOM_BAR_KARAOKE",$id)->update([
-                    "NAME_ROOM_BAR_KARAOKE" => $request->get("NAME_ROOM_BAR_KARAOKE"),
-                    "RENT_COST" => $request->get("RENT_COST"),
-                    "CONTENT" => $request->get("CONTENT")
-                ]);
                 HistoryModel::create([
                     "UUID_HISTORY_ACTION" => Str::uuid(),
                     "UUID_USER" => $user->UUID_USER,
@@ -155,6 +154,66 @@ class RoomBarKaraokeController extends Controller
             }
         }
         
+    }
+    
+    public function rating(Request $request,$id)
+    {
+        if($request->has('api_token'))
+        {
+            $user = UserModel::where("USER_TOKEN",$request->get("api_token"))->first();
+            if($user)
+            {   
+                $rating = RatingLikeModel::where([
+                    ["UUID_ROOM_BAR_KARAOKE",$id],
+                    ["UUID_USER",$user->UUID_USER],
+                    ["TYPE",1]
+                ])->first();
+                if($request->has('rating'))
+                {
+                    
+                    if(!$rating)
+                    {
+                        $room = RoomBarKaraokeModel::where("UUID_ROOM_BAR_KARAOKE",$id)->first();
+                        $rating = $room->STAR_RATING * $room->NUMBER_RATED;
+                        $rating = $rating + (float)$request->get('rating');
+                        $rating = $rating / ($room->NUMBER_RATED + 1);
+                        RoomBarKaraokeModel::where("UUID_ROOM_BAR_KARAOKE",$id)->update([
+                            'STAR_RATING' => $rating,
+                            'NUMBER_RATED' => $room->NUMBER_RATED + 1
+                        ]);
+                        RatingLikeModel::create([
+                            "UUID_RATING_LIKE" => Str::uuid(),
+                            "UUID_USER" => $user->UUID_USER,
+                            "UUID_ROOM_BAR_KARAOKE" => $room->UUID_ROOM_BAR_KARAOKE
+                        ]);
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'Bạn vừa đánh giá karaoke'
+                        ], 200);
+                    }
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Bạn đã đanh giá chi nhánh karaoke này!'
+                    ], 200);
+                }
+                else if($rating)
+                {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Bạn đã đánh giá chi nhánh karaoke này'
+                    ], 200);
+                }
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Bạn chưa đánh giá chi nhánh karaoke này'
+                ], 200);
+            }
+            return response()->json([
+                'success' => false,
+                'message' => 'Authorizon',
+                'status' => 401
+            ], 200);
+        }
     }
 
     /**
