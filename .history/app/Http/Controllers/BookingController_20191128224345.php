@@ -6,8 +6,11 @@ use Illuminate\Http\Request;
 use App\model\BookingModel;
 use App\model\UserModel;
 use App\model\HistoryModel;
+use App\model\BarKaraokeModel;
 use Illuminate\Support\Str;
 use DateTime;
+use Twilio\Rest\Client;
+
 class BookingController extends Controller
 {
     /**
@@ -15,6 +18,15 @@ class BookingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function token($token)
+    {
+        $user = UserModel::where("USER_TOKEN",$token)->first();
+        if($user)
+        {
+            return true;
+        }
+        return false;
+    }
     public function index(Request $request)
     {
         if($request->has('api_token'))
@@ -30,13 +42,15 @@ class BookingController extends Controller
                         $bookings = BookingModel::join("table_bar_karaoke","table_booking.UUID_BAR_KARAOKE","table_bar_karaoke.UUID_BAR_KARAOKE")
                         ->join("table_room_bar_karaoke","table_booking.UUID_ROOM_BAR_KARAOKE","table_room_bar_karaoke.UUID_ROOM_BAR_KARAOKE")
                         ->where("UUID_USER",$user->UUID_USER)
-                        ->select("table_booking.*","table_bar_karaoke.LOGO_BAR_KARAOKE","table_bar_karaoke.NAME_BAR_KARAOKE","table_bar_karaoke.URL_SAFE","table_room_bar_karaoke.NAME_ROOM_BAR_KARAOKE","table_room_bar_karaoke.RENT_COST")->get();
+                        ->select("table_booking.*","table_bar_karaoke.LOGO_BAR_KARAOKE","table_bar_karaoke.NAME_BAR_KARAOKE","table_bar_karaoke.URL_SAFE","table_room_bar_karaoke.NAME_ROOM_BAR_KARAOKE","table_room_bar_karaoke.RENT_COST")
+                        ->orderBy("table_booking.CREATED_AT","DESC")
+                        ->get();
                         return response()->json($bookings, 200);
                    }
                    else if($request->get('status') == 'check')
                    {
                         $other_booking = BookingModel::where([
-                            ["UUID_BOOKING",$request->get("UUID_BOOKING")],
+                            ["UUID_ROOM_BAR_KARAOKE",$request->get("UUID_ROOM_BAR_KARAOKE")],
                             ["STATUS",1]
                         ])->first();
                         if(!$other_booking)
@@ -45,7 +59,7 @@ class BookingController extends Controller
                                 [ "UUID_USER", $user->UUID_USER],
                                 [ "UUID_ROOM_BAR_KARAOKE",$request->get("UUID_ROOM_BAR_KARAOKE")]
                              ])
-                             ->whereIn('STATUS', 1)->orderBy('CREATED_AT','desc')->first();
+                             ->whereIn('STATUS', [0,1])->orderBy('CREATED_AT','desc')->first();
                              if($booking)
                              {
                                  if($booking->STATUS == 0)
@@ -65,10 +79,9 @@ class BookingController extends Controller
                                  ], 200);
                              }
                             return response()->json([
-                                'success' => true,
-                                'booking' => true,
-                                'message' => 'Bạn đang sử dụng phòng này',
-                                'data' => $booking
+                                'success' => false,
+                                'booking' => false,
+                                'message' => 'Chưa có người đặt phòng'
                              ], 200);
                         }
                         return response()->json([
@@ -104,7 +117,17 @@ class BookingController extends Controller
                 ->get();
                 return response()->json($bookings, 200);
             }
+            return response()->json([
+                'success' => false,
+                'message' => 'Not Found!',
+                'status' => 404
+            ], 200);
         }
+        return response()->json([
+            'success' => false,
+            'message' => 'Authorizon!',
+            'status' => 401
+        ], 200);
     }
 
     /**
@@ -127,6 +150,7 @@ class BookingController extends Controller
                 ])->first();
                 if(!$check_booking)
                 {
+                   
                     $booking = BookingModel::create([
                         "UUID_BOOKING" => Str::uuid(),
                         "UUID_ROOM_BAR_KARAOKE" => $request->get("UUID_ROOM_BAR_KARAOKE"),
@@ -179,6 +203,7 @@ class BookingController extends Controller
                 'message' => 'Không có booking'
             ], 200);
         }
+        
         $bookings = BookingModel::where("UUID_ROOM_BAR_KARAOKE", $id)->get();
         return response()->json([
             'success' => false,
@@ -261,6 +286,172 @@ class BookingController extends Controller
         }
     }
 
+    public function booking($id,Request $request)
+    {
+        if($request->has('api_token'))
+        {
+            $booking = BookingModel::where("table_booking.UUID_BOOKING", $id)
+                ->join('table_bar_karaoke','table_booking.UUID_BAR_KARAOKE','table_bar_karaoke.UUID_BAR_KARAOKE')
+                ->join("table_room_bar_karaoke","table_booking.UUID_ROOM_BAR_KARAOKE","table_room_bar_karaoke.UUID_ROOM_BAR_KARAOKE")
+                ->select('table_booking.*','table_bar_karaoke.NAME_BAR_KARAOKE',
+                'table_room_bar_karaoke.NAME_ROOM_BAR_KARAOKE', 'table_room_bar_karaoke.RENT_COST')->first();
+            return response()->json($booking, 200);
+        }
+    }
+
+    public function bookingmobile(Request $request)
+    {
+        $check = $this->token($request->get('api_token'));
+        if($check)
+        {
+            $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
+            $karaoke = BarKaraokeModel::where("UUID_BAR_KARAOKE",$request->get("UUID_BAR_KARAOKE"))->first();
+            $sid = 'ACad0c59c4da2b9866282a8ed0987dc09a';
+            $token = '536c11e6822ea6dee24848c6f10ccba1';
+            $client = new Client($sid, $token);
+            $result  = $client->messages->create(
+                // the number you'd like to send the message to
+                '+84'.$karaoke->PHONE_BAR_KARAOKE,
+                array(
+                    // A Twilio phone number you purchased at twilio.com/console
+                    'from' => '+16316157601',
+                    // the body of the text message you'd like to send
+                    'body' => 'Co khach hang dat phong ben chi nhanh '.$karaoke->NAME_BAR_KARAOKE.' cua ban!'
+                )
+            );
+            $booking = BookingModel::create([
+                "UUID_BOOKING" => Str::uuid(),
+                "UUID_ROOM_BAR_KARAOKE" => $request->get("UUID_ROOM_BAR_KARAOKE"),
+                "UUID_BAR_KARAOKE" => $request->get("UUID_BAR_KARAOKE"),
+                "UUID_USER" => $user->UUID_USER,
+                "TIME_START" => $request->get("TIME_START")
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Đặt phòng thành công',
+                'result' => $booking
+            ], 200);
+        }
+    }
+
+    public function paypal(Request $request,$id)
+    {
+        $check = $this->token($request->get('api_token'));
+        if($check)
+        {
+            $booking = BookingModel::where("UUID_BOOKING",$id)->first();
+            $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
+                // $karaoke = BarKaraokeModel::where("UUID_BAR_KARAOKE",$booking->UUID_BAR_KARAOKE)->first();
+                // $sid = 'ACcd6bb7cabf87808423aa180a9e1acc49';
+                // $token = 'b4cfc1ed2a215abc88db477577001447';
+                // $client = new Client($sid, $token);
+                // $result  = $client->messages->create(
+                //     // the number you'd like to send the message to
+                //     '+84'.$karaoke->PHONE_BAR_KARAOKE,
+                //     array(
+                //         // A Twilio phone number you purchased at twilio.com/console
+                //         'from' => '+17752009952',
+                //         // the body of the text message you'd like to send
+                //         'body' => 'KHACH HANG YEU CAU THANH TOAN!'
+                //     )
+                // );
+            $date =  new DateTime();    
+            
+            $start = new DateTime($booking->TIME_START);
+            
+            if($date->format('H') < $start->format('H'))
+            {
+                $end = ($date->format('H') + 24)*60 + $date->format('i');
+            }
+            else {
+                $end = $date->format('H')*60 + $date->format('i');
+            }
+            $start = $start->format('H')*60 + $start->format('i');
+            BookingModel::where("UUID_BOOKING",$id)->update([
+                "STATUS" => 2,
+                'TIME_END' => $date->format('H:i:s'),
+                'TOTAL_TIME' => $end - $start
+            ]);
+            $booking = BookingModel::where("UUID_BOOKING",$id)
+                ->join('table_user','table_booking.UUID_USER','table_user.UUID_USER')
+                ->join('table_bar_karaoke','table_booking.UUID_BAR_KARAOKE','table_bar_karaoke.UUID_BAR_KARAOKE')
+                ->join("table_room_bar_karaoke","table_booking.UUID_ROOM_BAR_KARAOKE","table_room_bar_karaoke.UUID_ROOM_BAR_KARAOKE")
+                ->select('table_booking.*','table_user.AVATAR', 'table_user.DISPLAY_NAME','table_user.GENDER', 
+                'table_user.BIRTH_DAY','table_user.PHONE', 'table_user.EMAIL','table_user.RELIABILITY', 
+                'table_user.NUMBER_BOOK','table_user.CANCLE_BOOK', 'table_user.EMAIL','table_user.RELIABILITY',
+                'table_user.NUMBER_BOOK','table_bar_karaoke.NAME_BAR_KARAOKE', 
+                'table_room_bar_karaoke.NAME_ROOM_BAR_KARAOKE', 'table_room_bar_karaoke.RENT_COST')
+                ->first();
+            $user_booking = UserModel::where("UUID_USER",$booking->UUID_USER)->first();
+            UserModel::where("UUID_USER",$booking->UUID_USER)->update([
+                'RELIABILITY' => $user_booking->RELIABILITY + 2,
+                'NUMBER_BOOK' => $user_booking->NUMBER_BOOK + 1 
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Cập nhật booking thành công!',
+                'result' => $booking
+            ], 200);
+        }
+    }
+    public function checkmobile(Request $request)
+    {
+        $check = $this->token($request->get('api_token'));
+        if($check)
+        {
+            $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
+            $booking = BookingModel::where([
+                ["UUID_USER", $user->UUID_USER],
+                ["UUID_ROOM_BAR_KARAOKE",$request->get("UUID_ROOM_BAR_KARAOKE")]
+            ])->orderBy("CREATED_AT","DESC")->first();
+            if($booking)
+            {   
+                return response()->json($booking, 200);
+            }
+            return response()->json([
+                'message' => 'Chưa có người đặt',
+                'STATUS' => -1
+            ], 200);
+            
+        }
+        else {
+            $booking = BookingModel::where("UUID_ROOM_BAR_KARAOKE",$request->get("UUID_ROOM_BAR_KARAOKE"))
+            ->orderBy("CREATED_AT","DESC")->first();
+            if($booking)
+            {   
+                return response()->json($booking, 200);
+            }
+            return response()->json([
+                'message' => 'Chưa có người đặt',
+                'STATUS' => -1
+            ], 200);
+        }
+    }
+
+    public function cancle(Request $request)
+    {
+        $check = $this->token($request->get('api_token'));
+        if($check)
+        {
+            $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
+            $booking = BookingModel::where([
+                ["UUID_USER",$user->UUID_USER],
+                ["UUID_ROOM_BAR_KARAOKE",$request->get('UUID_ROOM_BAR_KARAOKE')],
+                ["STATUS",0]
+            ])->update([
+                'STATUS' => 4
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Bạn vừa hủy đặt phòng',
+                'result' => $booking
+            ], 200);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Lỗi xác thực',
+        ], 401);
+    }
     /**
      * Remove the specified resource from storage.
      *

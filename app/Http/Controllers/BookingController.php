@@ -306,15 +306,15 @@ class BookingController extends Controller
         {
             $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
             $karaoke = BarKaraokeModel::where("UUID_BAR_KARAOKE",$request->get("UUID_BAR_KARAOKE"))->first();
-            $sid = 'ACcd6bb7cabf87808423aa180a9e1acc49';
-            $token = 'b4cfc1ed2a215abc88db477577001447';
+            $sid = 'ACad0c59c4da2b9866282a8ed0987dc09a';
+            $token = '536c11e6822ea6dee24848c6f10ccba1';
             $client = new Client($sid, $token);
             $result  = $client->messages->create(
                 // the number you'd like to send the message to
                 '+84'.$karaoke->PHONE_BAR_KARAOKE,
                 array(
                     // A Twilio phone number you purchased at twilio.com/console
-                    'from' => '+17752009952',
+                    'from' => '+16316157601',
                     // the body of the text message you'd like to send
                     'body' => 'Co khach hang dat phong ben chi nhanh '.$karaoke->NAME_BAR_KARAOKE.' cua ban!'
                 )
