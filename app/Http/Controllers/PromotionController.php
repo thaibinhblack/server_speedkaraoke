@@ -69,7 +69,7 @@ class PromotionController extends Controller
                     "VALUE_SAFE_OFF" => $request->get("VALUE_SAFE_OFF"),
                     "CODE_PROMOTION" => $request->get("CODE_PROMOTION"),
                     "NUMBER_PROMOTION" => $request->get("NUMBER_PROMOTION"),
-                    "USE_PROMOTION" => $request->get("NUMBER_PROMOTION"),
+                    "USE_PROMOTION" => 0,
                     "USER_CREATE" => $user->EMAIL,
                     "DATE_STARTED" => $request->get("DATE_STARTED"),
                     "DATE_END" => $request->get("DATE_END")
