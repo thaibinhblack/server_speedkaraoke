@@ -659,11 +659,10 @@ class BookingController extends Controller
         }
     }
 
-    public function get_booking_byday(Request $request,$id)
+    public function get_booking_byday(Request $request)
     {
         $bookings = BookingModel::join("table_user","table_booking.UUID_USER","table_user.UUID_USER")->where([
             ["DATE_BOOK", ">=",$request->get("DATE_BOOK")],
-            ["UUID_ROOM_BAR_KARAOKE", $id]
         ])->select("table_user.DISPLAY_NAME","table_booking.*")->get();
         return response()->json($bookings, 200);
     }
