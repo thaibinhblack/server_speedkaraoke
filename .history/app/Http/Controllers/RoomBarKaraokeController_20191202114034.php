@@ -162,7 +162,7 @@ class RoomBarKaraokeController extends Controller
     public function view($id)
     {
         $room = RoomBarKaraokeModel::where("UUID_ROOM_BAR_KARAOKE",$id)->first();
-        RoomBarKaraokeModel::where("UUID_ROOM_BAR_KARAOKE",$id)->update([
+        RoomBarKaraokeModel::update([
             "VIEW_ROOM" => $room->VIEW_ROOM + 1
         ]);
         return response()->json('success', 200);

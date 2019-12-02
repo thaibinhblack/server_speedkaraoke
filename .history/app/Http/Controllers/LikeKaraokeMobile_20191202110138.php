@@ -88,7 +88,7 @@ class LikeKaraokeMobile extends Controller
                 {
                     $room_like = RatingLikeModel::where([
                         ["UUID_USER" , $user->UUID_USER],
-                        ["UUID_ROOM_BAR_KARAOKE" , $request->get("UUID_ROOM_BAR_KARAOKE")],
+                        [ "UUID_ROOM_BAR_KARAOKE" , $request->get("UUID_ROOM_BAR_KARAOKE")],
                         ["TYPE" , 2]
                     ])->first();
                     if($room_like)
@@ -126,31 +126,27 @@ class LikeKaraokeMobile extends Controller
         if($request->has('api_token'))
         {
             $user = UserModel::where("USER_TOKEN",$request->get("api_token"))->first();
-            if($request->has("type"))
+            if($request->has("UUID_ROOM_BAR_KARAOKE"))
             {
-               if($request->get('type') == 'UUID_ROOM_BAR_KARAOKE')
-               {
-                    $check = RatingLikeModel::where([
-                        ["UUID_USER", $user->UUID_USER],
-                        ["UUID_ROOM_BAR_KARAOKE",$id],
-                        ["TYPE",1]
-                    ])->first();
-                    if($check)
-                    {
-                        return response()->json([
-                            'success' => true,
-                            'rating' => false,
-                            'message' => 'Bạn đã đánh giá phòng này!',
-                            'status' => 200
-                        ], 200);
-                    }
+                $check = RatingLikeModel::where([
+                   ["UUID_USER", $user->UUID_USER],
+                   ["UUID_ROOM_BAR_KARAOKE",$request->get("UUID_BAR_KARAOKE")]
+                ])->first();
+                if($check)
+                {
                     return response()->json([
                         'success' => true,
-                        'rating' => true,
-                        'message' => 'Bạn chưa đánh giá phòng này!',
+                        'rating' => false,
+                        'message' => 'Bạn đã đánh giá phòng này!',
                         'status' => 200
                     ], 200);
-               }
+                }
+                return response()->json([
+                    'success' => true,
+                    'rating' => true,
+                    'message' => 'Bạn chưa đánh giá phòng này!',
+                    'status' => 200
+                ], 200);
             }
         }
     }

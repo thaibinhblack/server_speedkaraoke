@@ -663,6 +663,7 @@ class BookingController extends Controller
     {
         $bookings = BookingModel::join("table_user","table_booking.UUID_USER","table_user.UUID_USER")->where([
             ["DATE_BOOK", ">=",$request->get("DATE_BOOK")],
+            ["STATUS",1]
         ])->select("table_user.DISPLAY_NAME","table_booking.*")->get();
         return response()->json($bookings, 200);
     }

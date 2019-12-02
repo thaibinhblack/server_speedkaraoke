@@ -88,7 +88,7 @@ class LikeKaraokeMobile extends Controller
                 {
                     $room_like = RatingLikeModel::where([
                         ["UUID_USER" , $user->UUID_USER],
-                        ["UUID_ROOM_BAR_KARAOKE" , $request->get("UUID_ROOM_BAR_KARAOKE")],
+                        [ "UUID_ROOM_BAR_KARAOKE" , $request->get("UUID_ROOM_BAR_KARAOKE")],
                         ["TYPE" , 2]
                     ])->first();
                     if($room_like)
@@ -132,8 +132,7 @@ class LikeKaraokeMobile extends Controller
                {
                     $check = RatingLikeModel::where([
                         ["UUID_USER", $user->UUID_USER],
-                        ["UUID_ROOM_BAR_KARAOKE",$id],
-                        ["TYPE",1]
+                        ["UUID_ROOM_BAR_KARAOKE",$id]
                     ])->first();
                     if($check)
                     {

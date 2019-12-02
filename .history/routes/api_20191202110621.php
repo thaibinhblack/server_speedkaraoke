@@ -56,7 +56,6 @@ Route::group(['prefix' => '/v1'], function () {
     Route::post("/room","RoomBarKaraokeController@store")->middleware('cors');
     Route::get('/room/{id}',"RoomBarKaraokeController@show")->middleware('cors');
     Route::get('/room/{id}/rating',"RoomBarKaraokeController@rating")->middleware('cors');
-    Route::get('/room/{id}/view',"RoomBarKaraokeController@view")->middleware('cors');
     Route::post("/room/{id}","RoomBarKaraokeController@update")->middleware('cors');
     //attribure
     Route::get('/attribute-room', 'AttributeRoomController@index')->middleware('cors');
@@ -89,7 +88,6 @@ Route::group(['prefix' => '/v1'], function () {
     Route::get('cancle','BookingController@cancle')->middleware('cors');
     Route::post('bookingmobile','BookingController@bookingmobile')->middleware('cors');
     Route::get('check_booking','BookingController@checkmobile')->middleware('cors');
-    Route::get('get_booking','BookingController@get_booking_byday')->middleware('cors');
     Route::get('/booking','BookingController@index')->middleware('cors');
     Route::get('/booking/{id}/check','BookingController@check')->middleware('cors');
     Route::get('/booking/{id}/show','BookingController@show')->middleware('cors');
@@ -127,6 +125,7 @@ Route::group(['prefix' => '/v1'], function () {
     //rating and view
 
     Route::get('check_rating/{id}','LikeKaraokeMobile@show')->middleware('cors');
+
 
     Route::get('sms','BookingController@sms')->middleware('cors');
 

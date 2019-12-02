@@ -27,6 +27,8 @@ Route::group(['prefix' => '/v1'], function () {
     Route::post('/user','UserController@store')->middleware('cors');
     Route::post('/resignter','UserController@resignter')->middleware('cors');
     Route::post('/user/login','UserController@login')->middleware('cors');
+    Route::post('/change_password','UserController@change_password')->middleware('cors');
+    Route::post('user_manageer','UserController@user_manageer')->middleware('cors');
     //karaoke
     Route::get('/map','BarKaraokeController@map')->middleware('cors');
     Route::get('karaoke','BarKaraokeController@index')->middleware('cors');
@@ -37,11 +39,15 @@ Route::group(['prefix' => '/v1'], function () {
     Route::post('karaoke','BarKaraokeController@store')->middleware('cors');
     Route::put('karaoke/{id}','BarKaraokeController@update')->middleware('cors');
     //comment karaoke
-    Route::get('commnet/{id}','CommentKaraokeController@show')->middleware('cors')
+    Route::get('comment/{id}','CommentKaraokeController@show')->middleware('cors');
     Route::post('comment','CommentKaraokeController@store')->middleware('cors');
+    //comment room
+    Route::get('comment_room/{id}','CommentRoomController@show')->middleware('cors');
+    Route::post('comment_room','CommentRoomController@store')->middleware('cors');
     //image
     Route::get('image/{id}','ImageController@show')->middleware('cors');
     Route::post('image/upload','ImageController@upload')->middleware('cors');
+    Route::post('image/delete','ImageController@destroy')->middleware('cors');
     Route::post('image','ImageController@store')->middleware('cors');
     //group menu
     Route::post('group-menu','GroupMenuController@store')->middleware('cors');
@@ -49,12 +55,13 @@ Route::group(['prefix' => '/v1'], function () {
     Route::get("/room","RoomBarKaraokeController@index")->middleware('cors');
     Route::post("/room","RoomBarKaraokeController@store")->middleware('cors');
     Route::get('/room/{id}',"RoomBarKaraokeController@show")->middleware('cors');
+    Route::get('/room/{id}/rating',"RoomBarKaraokeController@rating")->middleware('cors');
     Route::post("/room/{id}","RoomBarKaraokeController@update")->middleware('cors');
     //attribure
     Route::get('/attribute-room', 'AttributeRoomController@index')->middleware('cors');
     Route::post('/attribute-room', 'AttributeRoomController@store')->middleware('cors');
-    Route::put('/attribute-room/{id}', 'AttributeRoomController@update')->middleware('cors');
-    Route::delete('/attribute-room/{id}', 'AttributeRoomController@destroy')->middleware('cors');
+    Route::post('/attribute-room/{id}', 'AttributeRoomController@update')->middleware('cors');
+    Route::post('/attribute-room/{id}/delete', 'AttributeRoomController@destroy')->middleware('cors');
     //province 
     Route::get('province','ProvinceController@index')->middleware('cors');
     Route::post('province/search','ProvinceController@search')->middleware('cors');
@@ -64,9 +71,13 @@ Route::group(['prefix' => '/v1'], function () {
     Route::get('district/{id}','DistrictController@show')->middleware('cors');
     //group function
     Route::get("/group","GroupFunctionController@index")->middleware('cors');
-
+    //function
+    Route::get('/function',"FunctionController@index")->middleware('cors');
+    Route::get('/function_rule/{id}',"DetailFunctionController@show")->middleware('cors');
+    Route::post('/function_rule',"DetailFunctionController@store")->middleware('cors');
     //manager
     Route::get('/manager','ManagerKaraokeController@index')->middleware('cors');
+    Route::get('/manager/karaoke','ManagerKaraokeController@karaoke')->middleware('cors');
     Route::get('/manager/{id}','ManagerKaraokeController@show')->middleware('cors');
 
     //rule
@@ -74,17 +85,48 @@ Route::group(['prefix' => '/v1'], function () {
     Route::post('/rule','RuleController@store')->middleware('cors');
 
     //booking
+    Route::get('cancle','BookingController@cancle')->middleware('cors');
+    Route::post('bookingmobile','BookingController@bookingmobile')->middleware('cors');
+    Route::get('check_booking','BookingController@checkmobile')->middleware('cors');
     Route::get('/booking','BookingController@index')->middleware('cors');
     Route::get('/booking/{id}/check','BookingController@check')->middleware('cors');
     Route::get('/booking/{id}/show','BookingController@show')->middleware('cors');
+    Route::get('/booking/{id}/paypal','BookingController@paypal')->middleware('cors');
+    Route::get('/booking/{id}/booking','BookingController@booking')->middleware('cors');
+    Route::post('/booking/{id}/duyet','BookingController@duyet')->middleware('cors');
+    Route::post('/booking/{id}/huy','BookingController@huy')->middleware('cors');
+    Route::post('/booking/{id}/nhan','BookingController@nhan')->middleware('cors');
     Route::post('/booking','BookingController@store')->middleware('cors');
+    Route::post('/booking/them_truc_tiep','BookingController@them_truc_tiep')->middleware('cors');
 
     //promotion
     Route::get('/promotion','PromotionController@index')->middleware('cors');
     Route::get('/promotion/{id}','PromotionController@show')->middleware('cors');
+    Route::get('/promotion/{id}/check','PromotionController@check_promotion')->middleware('cors');
     Route::get('/promotion/{id}/karaoke','PromotionController@karaoke')->middleware('cors');
     Route::post('/promotion','PromotionController@store')->middleware('cors');
 
     //user view kararoke
     Route::post('/view_karaoke','ViewKaraokeController@store')->middleware('cors');
+
+    //like mobile
+    Route::get('like_karaoke', 'LikeKaraokeMobile@index')->middleware('cors');
+    Route::post('like_mobile', 'LikeKaraokeMobile@store')->middleware('cors');
+
+    //SMS
+    Route::get('/sms','SMSController@index')->middleware('cors');
+
+    //bill
+    Route::get('bill','BillCotroller@index')->middleware('cors');
+    Route::get('bill/{id}','BillCotroller@show')->middleware('cors');
+    Route::post('bill','BillCotroller@store')->middleware('cors');
+    Route::post('thanhtoan','BillCotroller@thanhtoan')->middleware('cors');
+
+    //rating and view
+
+    Route::get('check_rating/{id}','LikeKaraokeMobile@show')
+
+    Route::get('sms','BookingController@sms')->middleware('cors');
+
+
 });
