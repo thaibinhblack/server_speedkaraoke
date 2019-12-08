@@ -82,25 +82,16 @@ class RoomBarKaraokeController extends Controller
                     "NEW_ROOM" => $request->get("NEW_ROOM"),
                     "DESIGN" => $request->get("DESIGN"),
                     "EVENT" => $request->get("EVENT"),
-                    "IMAGE_ROOM_BAR_KARAOKE" => '/upload/karaoke/'.$file->getClientOriginalName(),
                     "STAR_RATING" => 5,
                     "NUMBER_RATED" => 1,
                     "USER_CREATE" => $user->EMAIL
                 ]);
                 return response()->json($room, 200);
             }
-            return response()->json([
-                'success' => false,
-                'message' => 'User không tồn tại!',
-                'status'=> 404
-            ], 200);
+            return response()->json('error', 200);
         }
         
-        return response()->json([
-            'succes' => false,
-            'message' => 'Authorizon',
-            'status' => 401
-        ], 200);
+        return response()->json('error', 200);
     }
 
     /**
@@ -156,10 +147,6 @@ class RoomBarKaraokeController extends Controller
                 {
                     RoomBarKaraokeModel::where("UUID_ROOM_BAR_KARAOKE",$id)->update([
                         "NAME_ROOM_BAR_KARAOKE" => $request->get("NAME_ROOM_BAR_KARAOKE"),
-                        "NEW_ROOM" => $request->get("NEW_ROOM"),
-                        "DESIGN" => $request->get("DESIGN"),
-                        "EVENT" => $request->get("EVENT"),
-                        "CAPACITY" => $request->get("CAPACITY"),
                         "RENT_COST" => $request->get("RENT_COST"),
                         "CONTENT" => $request->get("CONTENT")
                     ]);
@@ -172,17 +159,7 @@ class RoomBarKaraokeController extends Controller
                 ]);
                 return response()->json('success', 200);
             }
-            return response()->json([
-                'success' => false,
-                'message' => 'Token không hợp lệ!',
-                'status' => 404
-            ], 200);
         }
-        return response()->json([
-            'success' => false,
-            'message' => 'Authorizon',
-            'status' => 401
-        ], 200);
         
     }
     

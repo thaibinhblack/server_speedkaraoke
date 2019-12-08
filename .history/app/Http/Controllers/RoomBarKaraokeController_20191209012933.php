@@ -82,7 +82,6 @@ class RoomBarKaraokeController extends Controller
                     "NEW_ROOM" => $request->get("NEW_ROOM"),
                     "DESIGN" => $request->get("DESIGN"),
                     "EVENT" => $request->get("EVENT"),
-                    "IMAGE_ROOM_BAR_KARAOKE" => '/upload/karaoke/'.$file->getClientOriginalName(),
                     "STAR_RATING" => 5,
                     "NUMBER_RATED" => 1,
                     "USER_CREATE" => $user->EMAIL

@@ -110,7 +110,7 @@ class BookingController extends Controller
                 ->join('table_detail_manager_bar_karaoke',"table_booking.UUID_BAR_KARAOKE", "table_detail_manager_bar_karaoke.UUID_BAR_KARAOKE")
                 // ->where("table_booking.UUID_BAR_KARAOKE",$request->get("UUID_BAR_KARAOKE"))
                 // ->join('table_detail_manager_bar_karaoke,"table_bar_karaoke.UUID_BAR_KARAOKE","table_detail_manager_bar_karaoke.UUID_BAR_KARAOKE')
-                ->where("table_detail_manager_bar_karaoke.  ",$user->UUID_USER)
+                ->where("table_detail_manager_bar_karaoke.UUID_USER",$user->UUID_USER)
                 ->select('table_booking.*','table_user.AVATAR', 'table_user.DISPLAY_NAME','table_user.GENDER', 
                 'table_user.BIRTH_DAY','table_user.PHONE', 'table_user.EMAIL','table_user.RELIABILITY', 
                 'table_user.NUMBER_BOOK','table_user.CANCLE_BOOK', 'table_user.EMAIL','table_user.RELIABILITY',

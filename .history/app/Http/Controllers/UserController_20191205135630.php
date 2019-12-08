@@ -185,14 +185,12 @@ class UserController extends Controller
             }
             return response()->json([
                 "success" => false,
-                "message" => "Mật khẩu sai!",
-                "status" => 400
+                "message" => "Mật khẩu sai!"
             ], 200);
         }
         return response()->json([
             "success" => false,
-            "message" => "Email sai!",
-            "status" => 400
+            "message" => "Email sai!"
         ], 200);
         
     }

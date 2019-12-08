@@ -191,8 +191,7 @@ class UserController extends Controller
         }
         return response()->json([
             "success" => false,
-            "message" => "Email sai!",
-            "status" => 400
+            "message" => "Email sai!"
         ], 200);
         
     }

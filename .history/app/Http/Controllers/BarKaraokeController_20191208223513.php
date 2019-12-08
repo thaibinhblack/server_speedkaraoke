@@ -184,7 +184,7 @@ class BarKaraokeController extends Controller
                     ManagerKaraoke::create([
                         "UUID_USER" => $user->UUID_USER,
                         "UUID_BAR_KARAOKE" =>  $data["UUID_BAR_KARAOKE"],
-                        "USER_CREATE" => $user->EMAIL
+                        "USER_CRAETE" => $user->EMAIL
                     ]);
                     HistoryModel::create([
                         "UUID_USER" => $user->UUID_USER,
