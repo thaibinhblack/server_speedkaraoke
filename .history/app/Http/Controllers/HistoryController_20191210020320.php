@@ -3,17 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-class CommentKaraokeController extends Controller
+use App\model\ManagerKaraoke;
+class HistoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $managers = ManagerKaraoke::join("table_bar_karaoke","table_detail_manager_bar_karaoke.UUID_BAR_KARAOKE","table_bar_karaoke.UUID_BAR_KARAOKE")
+        ->join("table_user","table_detail_manager_bar_karaoke.UUID_USER","table_user.UUID_USER")
+        ->where("table_detail_manager_bar_karaoke.UUID_USER",$user->UUID_USER)
+        ->select("table_detail_manager_bar_karaoke.*","table_user.*","table_bar_karaoke.NAME_BAR_KARAOKE")
+        ->get();
+        return response()->json($managers, 200);
     }
 
     /**

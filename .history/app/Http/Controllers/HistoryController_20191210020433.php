@@ -3,20 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\model\UserModel;
-use App\model\CommentKaraokeModel;
-use Illuminate\Support\Str;
-
-class CommentKaraokeController extends Controller
+use App\model\ManagerKaraoke;
+class HistoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $managers = ManagerKaraoke::join("table_bar_karaoke","table_detail_manager_bar_karaoke.UUID_BAR_KARAOKE","table_bar_karaoke.UUID_BAR_KARAOKE")
+        ->join("table_user","table_detail_manager_bar_karaoke.UUID_USER","table_user.UUID_USER")
+        ->where("table_detail_manager_bar_karaoke.UUID_USER",$user->UUID_USER)
+        ->select("table_detail_manager_bar_karaoke.*","table_user.*","table_bar_karaoke.NAME_BAR_KARAOKE")
+        ->get();
+        return response()->json($managers, 200);
     }
 
     /**
@@ -27,18 +29,7 @@ class CommentKaraokeController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->has('api_token'))
-        {
-            $user = UserModel::where("USER_TOKEN",$request->get("api_token"))->first();
-            if($user)
-            {
-                CommentKaraokeModel::create([
-                    "UUID_USER" => $user->UUID_USER,
-                    "UUID_BAR_KARAOKE" => $request->get("UUID_BAR_KARAOKE"),
-                    "CONTENT_COMMENT" => $request->get("CONTENT_COMMENT")
-                ]);
-            }
-        }
+        //
     }
 
     /**

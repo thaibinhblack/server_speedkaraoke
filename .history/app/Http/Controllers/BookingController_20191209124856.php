@@ -110,7 +110,7 @@ class BookingController extends Controller
                 ->join('table_detail_manager_bar_karaoke',"table_booking.UUID_BAR_KARAOKE", "table_detail_manager_bar_karaoke.UUID_BAR_KARAOKE")
                 // ->where("table_booking.UUID_BAR_KARAOKE",$request->get("UUID_BAR_KARAOKE"))
                 // ->join('table_detail_manager_bar_karaoke,"table_bar_karaoke.UUID_BAR_KARAOKE","table_detail_manager_bar_karaoke.UUID_BAR_KARAOKE')
-                ->where("table_detail_manager_bar_karaoke.UUID_USER",$user->UUID_USER)
+                ->where("table_detail_manager_bar_karaoke.  ",$user->UUID_USER)
                 ->select('table_booking.*','table_user.AVATAR', 'table_user.DISPLAY_NAME','table_user.GENDER', 
                 'table_user.BIRTH_DAY','table_user.PHONE', 'table_user.EMAIL','table_user.RELIABILITY', 
                 'table_user.NUMBER_BOOK','table_user.CANCLE_BOOK', 'table_user.EMAIL','table_user.RELIABILITY',
@@ -294,12 +294,9 @@ class BookingController extends Controller
                 BookingModel::where("UUID_BOOKING",$id)->update([
                     "STATUS" => 1
                 ]);
-                
                 $booking = BookingModel::join("table_user","table_booking.UUID_USER","table_user.UUID_USER")
                 ->where("UUID_BOOKING",$id)->first();
-                RoomBarKaraokeModel::where('UUID_ROOM_BAR_KARAOKE',$booking->UUID_ROOM_BAR_KARAOKE)->update([
-                    "CLOSE" => 1
-                ]);
+                
                 HistoryModel::create([
                     "UUID_HISTORY_ACTION" => Str::uuid(),
                     "UUID_USER" => $user->UUID_USER,
@@ -341,9 +338,7 @@ class BookingController extends Controller
                 ]);
                 $booking = BookingModel::join("table_user","table_booking.UUID_USER","table_user.UUID_USER")
                 ->where("UUID_BOOKING",$id)->first();
-                RoomBarKaraokeModel::where('UUID_ROOM_BAR_KARAOKE',$booking->UUID_ROOM_BAR_KARAOKE)->update([
-                    "CLOSE" => 0
-                ]);
+
                 HistoryModel::create([
                     "UUID_HISTORY_ACTION" => Str::uuid(),
                     "UUID_USER" => $user->UUID_USER,
@@ -656,9 +651,6 @@ class BookingController extends Controller
                 'table_user.NUMBER_BOOK','table_bar_karaoke.NAME_BAR_KARAOKE', 
                 'table_room_bar_karaoke.NAME_ROOM_BAR_KARAOKE', 'table_room_bar_karaoke.RENT_COST')
                 ->first();
-            RoomBarKaraokeModel::where('UUID_ROOM_BAR_KARAOKE',$booking->UUID_ROOM_BAR_KARAOKE)->update([
-                "CLOSE" => 0
-            ]);
             $user_booking = UserModel::where("UUID_USER",$booking->UUID_USER)->first();
             UserModel::where("UUID_USER",$booking->UUID_USER)->update([
                 'RELIABILITY' => $user_booking->RELIABILITY + 2,

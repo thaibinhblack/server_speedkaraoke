@@ -121,12 +121,6 @@ class PromotionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-
-    public function detail($id)
-    {
-        $promotion = PromotionModel::where("UUID_PROMOTION",$id)->first();
-        return response()->json($promotion, 200);
-    }
     public function show($id)
     {
         $promotion = PromotionModel::where([

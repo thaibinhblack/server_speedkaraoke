@@ -26,7 +26,7 @@ class PromotionController extends Controller
             if($user)
             {
                 $promotion = PromotionModel::join('table_detail_promotion_karaoke','table_promotion.UUID_PROMOTION','table_detail_promotion_karaoke.UUID_PROMOTION')
-                ->join('table_detail_manager_bar_karaoke','table_detail_promotion_karaoke.UUID_BAR_KARAOKE','table_detail_manager_bar_karaoke.UUID_BAR_KARAOKE')
+                ->join('table_detail_manager_bar_karaoke','table_detail_promotion_karaoke.UUID_BAR_KARAOKE','table_detail_manager_bar_karaoke')
                 ->where('table_detail_manager_bar_karaoke.UUID_USER',$user->UUID_USER)
                 ->select('table_promotion.*','table_detail_promotion_karaoke.UUID_PROMOTION',DB::raw('count(*) as total'))
                 ->groupBy('table_detail_promotion_karaoke.UUID_PROMOTION')->orderBy("total","DESC")
@@ -121,12 +121,6 @@ class PromotionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-
-    public function detail($id)
-    {
-        $promotion = PromotionModel::where("UUID_PROMOTION",$id)->first();
-        return response()->json($promotion, 200);
-    }
     public function show($id)
     {
         $promotion = PromotionModel::where([

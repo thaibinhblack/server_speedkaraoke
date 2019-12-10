@@ -31,8 +31,7 @@ class BarKaraokeController extends Controller
             {
                 $karaoke = BarKaraokeModel::join("table_province","table_bar_karaoke.ID_PROVINCE","table_province.ID_PROVINCE")
                 ->join("table_district","table_bar_karaoke.ID_DISTRICT","table_district.ID_DISTRICT")
-                ->join('table_detail_manager_bar_karaoke','table_bar_karaoke.UUID_BAR_KARAOKE','table_detail_manager_bar_karaoke.UUID_BAR_KARAOKE')
-                ->where('UUID_USER',$user->UUID_USER)
+                ->where('USER_CREATE',$user->EMAIL)
                 ->select("table_bar_karaoke.*","table_province.NAME_PROVINCE","table_district.NAME_DISTRICT")
                 ->orderBy('CREATED_AT', 'asc')
                 ->get();
@@ -128,12 +127,6 @@ class BarKaraokeController extends Controller
             ->limit(10)
             ->get();
         return response()->json($karaoke, 200);
-    }
-
-    public function search(Request $request)
-    {
-        $karaokes = BarKaraokeModel::where("ID_PROVINCE", $request->get("ID_PROVINCE"))->orWhere("ID_DISTRICT",$request->get("ID_DISTRICT"))->get();
-        return response()->json($karaokes, 200);
     }
 
     public function map(Request $request)

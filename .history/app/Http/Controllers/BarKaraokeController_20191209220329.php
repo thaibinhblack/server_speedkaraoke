@@ -31,8 +31,7 @@ class BarKaraokeController extends Controller
             {
                 $karaoke = BarKaraokeModel::join("table_province","table_bar_karaoke.ID_PROVINCE","table_province.ID_PROVINCE")
                 ->join("table_district","table_bar_karaoke.ID_DISTRICT","table_district.ID_DISTRICT")
-                ->join('table_detail_manager_bar_karaoke','table_bar_karaoke.UUID_BAR_KARAOKE','table_detail_manager_bar_karaoke.UUID_BAR_KARAOKE')
-                ->where('UUID_USER',$user->UUID_USER)
+                ->where('USER_CREATE',$user->EMAIL)
                 ->select("table_bar_karaoke.*","table_province.NAME_PROVINCE","table_district.NAME_DISTRICT")
                 ->orderBy('CREATED_AT', 'asc')
                 ->get();

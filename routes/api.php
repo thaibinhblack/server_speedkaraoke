@@ -37,7 +37,8 @@ Route::group(['prefix' => '/v1'], function () {
     Route::post('karaoke/{id}/update','BarKaraokeController@update')->middleware('cors');
     Route::get('karaoke/{id}/view','BarKaraokeController@view')->middleware('cors');
     Route::post('karaoke','BarKaraokeController@store')->middleware('cors');
-    Route::put('karaoke/{id}','BarKaraokeController@update')->middleware('cors');
+    // Route::put('karaoke/{id}','BarKaraokeController@update')->middleware('cors');
+    Route::get('search','BarKaraokeController@search')->middleware('cors');
     //comment karaoke
     Route::get('comment/{id}','CommentKaraokeController@show')->middleware('cors');
     Route::post('comment','CommentKaraokeController@store')->middleware('cors');
@@ -104,6 +105,7 @@ Route::group(['prefix' => '/v1'], function () {
     //promotion
     Route::get('/promotion','PromotionController@index')->middleware('cors');
     Route::get('/promotion/{id}','PromotionController@show')->middleware('cors');
+    Route::get('/promotion/{id}/detail','PromotionController@detail')->middleware('cors');
     Route::get('/promotion/{id}/check','PromotionController@check_promotion')->middleware('cors');
     Route::get('/promotion/{id}/karaoke','PromotionController@karaoke')->middleware('cors');
     Route::post('/promotion','PromotionController@store')->middleware('cors');
@@ -124,6 +126,7 @@ Route::group(['prefix' => '/v1'], function () {
     Route::post('bill','BillCotroller@store')->middleware('cors');
     Route::post('thanhtoan','BillCotroller@thanhtoan')->middleware('cors');
 
+    Route::get('/history','HistoryController@index')->middleware('cors');
     //rating and view
 
     Route::get('check_rating/{id}','LikeKaraokeMobile@show')->middleware('cors');

@@ -20,7 +20,7 @@ class CommentKaraokeController extends Controller
         {
             $comments = CommentKaraokeModel::join("table_user","table_comment_karaoke.UUID_USER","table_user.UUID_USER")
             ->where("UUID_BAR_KARAOKE",$request->get("UUID_BAR_KARAOKE"))
-            ->select("table_user.AVATAR","table_comment_karaoke.*")
+            ->select("table_user.AVATAR","table_user.DISPLAY_NAME","table_comment_karaoke.*")
             ->orderBy("CREATED_AT","DESC")
             ->get();
             return response()->json($comments, 200);
@@ -74,7 +74,7 @@ class CommentKaraokeController extends Controller
     {
         $comments = CommentKaraokeModel::join("table_user","table_comment_karaoke.UUID_USER","table_user.UUID_USER")
         ->where("UUID_BAR_KARAOKE",$id)
-        ->select("table_user.AVATAR","table_comment_karaoke.*")
+        ->select("table_user.AVATAR","table_user.DISPLAY_NAME","table_comment_karaoke.*")
         ->orderBy("CREATED_AT","DESC")
         ->get();
         return response()->json($comments, 200);

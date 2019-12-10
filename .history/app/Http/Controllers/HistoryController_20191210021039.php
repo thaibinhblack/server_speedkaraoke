@@ -19,27 +19,13 @@ class HistoryController extends Controller
             $user = UserModel::where("USER_TOKEN",$request->get('api_token'))->first();
             if($user)
             {
-               if($user->UUID_RULE == 'manager-2019')
-               {
                 $managers = ManagerKaraoke::join("table_bar_karaoke","table_detail_manager_bar_karaoke.UUID_BAR_KARAOKE","table_bar_karaoke.UUID_BAR_KARAOKE")
                 ->join("table_user","table_detail_manager_bar_karaoke.UUID_USER","table_user.UUID_USER")
-                ->join('table_history_action', 'table_detail_manager_bar_karaoke.UUID_USER','table_history_action.UUID_USER')
-                ->where("table_bar_karaoke.USER_CREATE",$user->EMAIL)
-                ->select("table_history_action.*","table_user.AVATAR", "table_user.DISPLAY_NAME","table_bar_karaoke.NAME_BAR_KARAOKE")
-                ->orderBy('table_history_action.CREATED_AT','DESC')
+                ->join('table_history', 'table_user.UUID_USER','table_history.UUID_USER')
+                ->where("table_detail_manager_bar_karaoke.UUID_USER",$user->UUID_USER)
+                ->select("table_detail_manager_bar_karaoke.*","table_user.*","table_bar_karaoke.NAME_BAR_KARAOKE")
                 ->get();
                 return response()->json($managers, 200);
-               }
-               else {
-                $managers = ManagerKaraoke::join("table_bar_karaoke","table_detail_manager_bar_karaoke.UUID_BAR_KARAOKE","table_bar_karaoke.UUID_BAR_KARAOKE")
-                ->join("table_user","table_detail_manager_bar_karaoke.UUID_USER","table_user.UUID_USER")
-                ->join('table_history_action', 'table_detail_manager_bar_karaoke.UUID_USER','table_history_action.UUID_USER')
-                ->where("table_bar_karaoke.UUID_USER",$user->UUID_USER)
-                ->select("table_history_action.*","table_user.AVATAR", "table_user.DISPLAY_NAME","table_bar_karaoke.NAME_BAR_KARAOKE")
-                ->orderBy('table_history_action.CREATED_AT','DESC')
-                ->get();
-                return response()->json($managers, 200);
-               }
             }
         }
        
