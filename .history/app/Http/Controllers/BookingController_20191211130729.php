@@ -577,16 +577,16 @@ class BookingController extends Controller
             $sid = 'AC4db4f33d4ee7ca06e6dd7b06f9c72274';
             $token = 'c98c668873c3404720c2b4228e302d6c';
             $client = new Client($sid, $token);
-            // $result  = $client->messages->create(
-            //     // the number you'd like to send the message to
-            //     '+84'.$karaoke->PHONE_BAR_KARAOKE,
-            //     array(
-            //         // A Twilio phone number you purchased at twilio.com/console
-            //         'from' => '+12055189442',
-            //         // the body of the text message you'd like to send
-            //         'body' => 'Co khach hang dat phong ben chi nhanh '.$karaoke->NAME_BAR_KARAOKE.' cua ban!'
-            //     )
-            // );
+            $result  = $client->messages->create(
+                // the number you'd like to send the message to
+                '+84'.$karaoke->PHONE_BAR_KARAOKE,
+                array(
+                    // A Twilio phone number you purchased at twilio.com/console
+                    'from' => '+12055189442',
+                    // the body of the text message you'd like to send
+                    'body' => 'Co khach hang dat phong ben chi nhanh '.$karaoke->NAME_BAR_KARAOKE.' cua ban!'
+                )
+            );
             UserModel::where("UUID_USER",$user->UUID_USER)->update([
                 'NUMBER_BOOK' => $user->NUMBER_BOOK + 1
             ]);
@@ -595,7 +595,7 @@ class BookingController extends Controller
                 "UUID_ROOM_BAR_KARAOKE" => $request->get("UUID_ROOM_BAR_KARAOKE"),
                 "UUID_BAR_KARAOKE" => $request->get("UUID_BAR_KARAOKE"),
                 "UUID_USER" => $user->UUID_USER,
-                "TIME_START" => $request->get("TIME_START"),
+                "TIME_START" => $request->get("TIME_START")
                 "DATE_BOOK" => $request->get("DATE_BOOK")
             ]);
             return response()->json([
